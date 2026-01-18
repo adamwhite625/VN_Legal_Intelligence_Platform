@@ -7,16 +7,29 @@ python-multipart
 # --- Database (MySQL) ---
 sqlalchemy>=2.0.0
 mysql-connector-python>=8.3.0
-pymysql  # Driver thay thế nếu cần
+pymysql
 
 # --- AI & Vector DB ---
 qdrant-client>=1.7.0
 langchain>=0.1.0
 langchain-community
-langchain-google-genai
-langchain-qdrant
+langchain-core
+
+# Các provider cụ thể cho LangChain (Quan trọng)
+langchain-google-genai      # Dùng cho Chatbot chính (Gemini)
+langchain-openai            # Dùng cho Data Generator (gpt-4o-mini)
+langchain-huggingface       # Dùng cho Embedding (import_local.py)
+langchain-qdrant            # Kết nối Langchain với Qdrant
+
+# --- Xử lý Model & Embedding ---
 transformers>=4.37.0
-torch --index-url https://download.pytorch.org/whl/cpu  # Bản CPU cho nhẹ
 sentence-transformers
-cohere
 numpy
+
+# --- Scraper Tools (Cào dữ liệu) ---
+playwright                  # Dùng để cào Thư Viện Pháp Luật
+beautifulsoup4              # Hỗ trợ xử lý HTML nếu cần
+
+# --- Torch (Bản CPU cho nhẹ máy) ---
+# Lưu ý: Nếu cài bị lỗi, hãy chạy lệnh cài riêng bên dưới
+torch --index-url https://download.pytorch.org/whl/cpu
