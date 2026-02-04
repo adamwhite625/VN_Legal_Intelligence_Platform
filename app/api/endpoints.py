@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel
 
-# Import Agent mới
-from app.core.hybrid_agent import app as hybrid_agent
+# --- SỬA DÒNG NÀY (QUAN TRỌNG) ---
+# Import từ main_graph thay vì hybrid_agent cũ
+from app.core.main_graph import app as agent_app 
+# ---------------------------------
+
 from app import crud, schemas
 from app.database import get_db
 
@@ -18,7 +21,7 @@ class QueryInput(BaseModel):
 # --- Schema Output ---
 class ChatResponse(BaseModel):
     answer: str
-    sources: List[str] = [] # <--- Trường này sẽ chứa danh sách nguồn
+    sources: List[str] = [] 
 
 # --- Các API Session (Giữ nguyên) ---
 @router.post("/session/start")
@@ -38,39 +41,39 @@ def delete_session(session_id: int, db: Session = Depends(get_db)):
 def get_history(session_id: int, db: Session = Depends(get_db)):
     return crud.get_chat_history(db, session_id)
 
-# --- Chat API (CẬP NHẬT) ---
+# --- Chat API ---
 @router.post("/chat", response_model=ChatResponse)
 async def chat_with_lawyer(input_data: QueryInput, db: Session = Depends(get_db)):
     if not input_data.query:
         raise HTTPException(status_code=400, detail="Vui lòng nhập câu hỏi")
 
-    # 1. Lấy lịch sử chat (5 tin gần nhất)
+    # 1. Lấy lịch sử chat
     chat_history_text = ""
     if input_data.session_id:
         history = crud.get_chat_history(db, input_data.session_id)
         chat_history_text = "\n".join([f"{msg.sender}: {msg.message}" for msg in history[-5:]])
 
-    # 2. Gọi AGENT
+    # 2. Gọi AGENT (Graph mới)
     try:
         inputs = {
             "query": input_data.query,
-            "chat_history": chat_history_text
+            "chat_history": chat_history_text,
+            # Các trường khác như 'intent', 'retrieved_docs' sẽ tự khởi tạo trong Graph
         }
         
-        output = hybrid_agent.invoke(inputs)
+        # Sửa tên biến gọi invoke cho khớp với import ở trên
+        output = agent_app.invoke(inputs) 
         
-        # Lấy câu trả lời
-        final_answer = output.get("generation", "Xin lỗi, hệ thống gặp sự cố.")
-        
-        # --- LẤY DANH SÁCH NGUỒN ---
-        final_sources = output.get("sources", []) # Lấy list nguồn từ state
+        # Lấy kết quả
+        final_answer = output.get("generation", "Xin lỗi, hệ thống đang gặp sự cố.")
+        final_sources = output.get("sources", [])
         
     except Exception as e:
         print(f"❌ Lỗi Agent: {e}")
-        final_answer = "Hệ thống đang bảo trì."
+        final_answer = "Hệ thống đang bảo trì hoặc gặp lỗi xử lý."
         final_sources = []
 
-    # 3. Lưu DB (Lưu ý: DB hiện tại chỉ lưu text, không lưu sources vào lịch sử lâu dài trừ khi sửa DB)
+    # 3. Lưu DB
     if input_data.session_id:
         try:
             crud.create_message(db, schemas.MessageCreate(
@@ -82,8 +85,7 @@ async def chat_with_lawyer(input_data: QueryInput, db: Session = Depends(get_db)
         except Exception as e:
             print(f"[LỖI DB] {e}")
 
-    # 4. Trả về kết quả kèm nguồn
     return ChatResponse(
         answer=final_answer,
-        sources=final_sources # <--- Gửi danh sách này cho Frontend
+        sources=final_sources
     )
