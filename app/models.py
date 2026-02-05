@@ -1,25 +1,41 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from sqlalchemy.sql import func
 from app.database import Base
 
-class ChatSession(Base):
-    __tablename__ = "chat_sessions"
+class User(Base):
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime, default=datetime.now)
+    # MySQL bắt buộc String phải có độ dài, ví dụ String(255)
+    email = Column(String(255), unique=True, index=True)
+    hashed_password = Column(String(255))
+    full_name = Column(String(255), nullable=True)
+    role = Column(String(50), default="user") # user hoặc admin
     
-    # Quan hệ 1-nhiều với tin nhắn
-    messages = relationship("ChatMessage", back_populates="session", cascade="all, delete-orphan")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    sessions = relationship("ChatSession", back_populates="user")
 
-class ChatMessage(Base):
-    __tablename__ = "chat_messages"
+class ChatSession(Base):
+    __tablename__ = "sessions"
 
     id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer, ForeignKey("chat_sessions.id"))
-    sender = Column(String(50))  # "user" hoặc "bot"
-    message = Column(Text)       # Nội dung tin nhắn (Dùng Text thay vì NVARCHAR(MAX))
-    sent_at = Column(DateTime, default=datetime.now)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Quan hệ ngược lại với session
+    user = relationship("User", back_populates="sessions")
+    messages = relationship("Message", back_populates="session", cascade="all, delete-orphan")
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(Integer, ForeignKey("sessions.id"))
+    sender = Column(String(50)) # user hoặc assistant
+    
+    # Dùng Text thay vì String để lưu tin nhắn dài không giới hạn
+    message = Column(Text) 
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
     session = relationship("ChatSession", back_populates="messages")

@@ -8,8 +8,9 @@ from pydantic import BaseModel
 from app.core.main_graph import app as agent_app 
 # ---------------------------------
 
-from app import crud, schemas
+from app import crud, schemas, models
 from app.database import get_db
+from app.core import security
 
 router = APIRouter()
 
@@ -23,14 +24,28 @@ class ChatResponse(BaseModel):
     answer: str
     sources: List[str] = [] 
 
-# --- Các API Session (Giữ nguyên) ---
+# --- Các API Session ---
 @router.post("/session/start")
-def start_new_session(db: Session = Depends(get_db)):
-    return crud.create_session(db)
+def start_new_session(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    # Tạo session gắn với user_id
+    new_session = models.ChatSession(user_id=current_user.id)
+    db.add(new_session)
+    db.commit()
+    db.refresh(new_session)
+    return new_session
 
 @router.get("/sessions")
-def read_sessions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud.get_sessions(db, skip=skip, limit=limit)
+def read_sessions(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(security.get_current_user) # Bắt buộc đăng nhập
+):
+    # Lọc theo user_id
+    return db.query(models.ChatSession).filter(models.ChatSession.user_id == current_user.id).offset(skip).limit(limit).all()
 
 @router.delete("/session/{session_id}")
 def delete_session(session_id: int, db: Session = Depends(get_db)):
@@ -89,3 +104,12 @@ async def chat_with_lawyer(input_data: QueryInput, db: Session = Depends(get_db)
         answer=final_answer,
         sources=final_sources
     )
+
+@router.get("/admin/users", response_model=List[schemas.UserResponse])
+def get_all_users(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db),
+    admin_user: models.User = Depends(security.get_current_admin) # <--- Dùng hàm check admin
+):
+    return db.query(models.User).offset(skip).limit(limit).all()

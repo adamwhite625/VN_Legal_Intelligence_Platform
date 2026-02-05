@@ -2,6 +2,7 @@ import SidebarHeader from "./SidebarHeader";
 import SidebarSessionList from "./SidebarSessionList";
 import SidebarUser from "./SidebarUser";
 import type { Session } from "@/types";
+import { useAuth } from "@/context/AuthContext";
 
 interface Props {
   sessions: Session[];
@@ -16,6 +17,7 @@ export default function Sidebar({
   onSelect,
   onNew,
 }: Props) {
+  const { user } = useAuth();
   return (
     <aside className="w-72 h-full flex flex-col border-r bg-background">
       {/* Header */}
@@ -30,6 +32,11 @@ export default function Sidebar({
 
       {/* User */}
       <SidebarUser />
+      {user?.role === "admin" && (
+        <div className="p-4 border-t bg-red-50 text-red-600 font-bold">
+          Admin Dashboard
+        </div>
+      )}
     </aside>
   );
 }
