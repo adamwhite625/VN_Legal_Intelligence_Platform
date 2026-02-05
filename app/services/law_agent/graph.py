@@ -1,10 +1,16 @@
 from langgraph.graph import StateGraph, END
-from app.core.agents.state import LawAgentState
-from app.core.agents.router_agent import router_node
-from app.core.agents.retrieval_agent import retriever_node
-from app.core.agents.checker_agent import sufficiency_checker_node
-from app.core.agents.writer_agent import answer_node
-from app.core.agents.fallback_agent import fallback_node # Import file mới
+
+# --- SỬA CÁC DÒNG IMPORT DƯỚI ĐÂY ---
+# Import State từ cùng thư mục (dấu chấm .)
+from .state import LawAgentState
+
+# Import các Node từ thư mục con 'nodes'
+from .nodes.router_agent import router_node
+from .nodes.retrieval_agent import retriever_node
+from .nodes.checker_agent import sufficiency_checker_node
+from .nodes.writer_agent import answer_node
+from .nodes.fallback_agent import fallback_node
+# ------------------------------------
 
 workflow = StateGraph(LawAgentState)
 
@@ -20,13 +26,13 @@ workflow.set_entry_point("router")
 workflow.add_edge("router", "retriever")
 workflow.add_edge("retriever", "checker")
 
-# Logic rẽ nhánh mới
+# Logic rẽ nhánh
 def route_after_check(state):
-    status = state["check_status"]
+    status = state.get("check_status", "NO_LAW")
     if status == "SUFFICIENT":
         return "answer"
     else:
-        # Cả MISSING_INFO và NO_LAW đều đẩy sang Fallback xử lý
+        # MISSING_INFO hoặc NO_LAW đều đẩy sang Fallback
         return "fallback"
 
 workflow.add_conditional_edges(

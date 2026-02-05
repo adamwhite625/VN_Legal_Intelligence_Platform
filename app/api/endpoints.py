@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 # --- SỬA DÒNG NÀY (QUAN TRỌNG) ---
 # Import từ main_graph thay vì hybrid_agent cũ
-from app.core.main_graph import app as agent_app 
+from app.services.law_agent.graph import app as agent_app 
 # ---------------------------------
 
 from app import crud, schemas, models

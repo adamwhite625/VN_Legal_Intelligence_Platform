@@ -41,19 +41,21 @@ export default function ChatMessageItem({ message }: { message: Message }) {
 
         {/* Hiển thị nguồn (chỉ cho Bot) */}
         {!isUser && message.sources && message.sources.length > 0 && (
-          <div className="text-xs text-muted-foreground bg-muted/30 p-2 rounded border border-dashed">
-            <div className="flex items-center gap-1 font-semibold mb-1">
-              <BookOpen className="h-3 w-3" /> Nguồn tham khảo:
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {message.sources.map((src, i) => (
-                <span
-                  key={i}
-                  className="px-1.5 py-0.5 bg-background border rounded shadow-sm"
-                >
-                  {src}
-                </span>
-              ))}
+          <div className="text-xs text-muted-foreground bg-muted/30 px-3 py-2 rounded border border-dashed">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1 font-semibold whitespace-nowrap">
+                <BookOpen className="h-3 w-3" /> Nguồn tham khảo:
+              </span>
+              <div className="flex gap-1.5 flex-wrap">
+                {message.sources.map((src, i) => (
+                  <span
+                    key={i}
+                    className="px-2 py-1 bg-background border rounded text-xs whitespace-nowrap"
+                  >
+                    {src}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         )}
