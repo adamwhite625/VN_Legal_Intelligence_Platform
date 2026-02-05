@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import List, Optional
 
@@ -36,3 +36,31 @@ class SessionResponse(SessionBase):
     
     class Config:
         from_attributes = True
+
+# --- User Schemas ---
+class UserBase(BaseModel):
+    email: EmailStr
+
+class UserCreate(UserBase):
+    password: str
+    full_name: Optional[str] = None
+
+class UserLogin(UserBase):
+    password: str
+
+class UserResponse(UserBase):
+    id: int
+    full_name: Optional[str] = None
+    role: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# --- Token Schemas ---
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
