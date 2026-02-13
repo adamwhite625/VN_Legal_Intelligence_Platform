@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@config "../tailwind.config.ts";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
