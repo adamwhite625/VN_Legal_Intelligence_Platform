@@ -1,46 +1,51 @@
 import { create } from "zustand";
-import { mockLaws, type LawItem } from "./mockData";
+import { searchLaws, type LawItem } from "../api/searchApi";
 
 interface SearchState {
   keyword: string;
-  type: string;
-  year: string;
-  authority: string;
   results: LawItem[];
+  loading: boolean;
   setKeyword: (k: string) => void;
-  setFilter: (field: string, value: string) => void;
-  filterResults: () => void;
+  filterResults: () => Promise<void>;
 }
 
 export const useSearchStore = create<SearchState>((set, get) => ({
   keyword: "",
-  type: "",
-  year: "",
-  authority: "",
-  results: mockLaws,
+  results: [],
+  loading: false,
 
-  setKeyword: (keyword) => {
+  setKeyword: async (keyword) => {
     set({ keyword });
-    get().filterResults();
+    await get().filterResults();
   },
 
-  setFilter: (field, value) => {
-    set({ [field]: value } as any);
-    get().filterResults();
-  },
+  filterResults: async () => {
+    const { keyword } = get();
 
-  filterResults: () => {
-    const { keyword, type, year, authority } = get();
+    if (!keyword.trim()) {
+      set({ results: [] });
+      return;
+    }
 
-    const filtered = mockLaws.filter((law) => {
-      return (
-        law.title.toLowerCase().includes(keyword.toLowerCase()) &&
-        (type === "" || law.type === type) &&
-        (year === "" || law.year === year) &&
-        (authority === "" || law.authority === authority)
+    set({ loading: true });
+
+    try {
+      const response = await searchLaws(
+        keyword,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        20,
+        "fast",
       );
-    });
 
-    set({ results: filtered });
+      set({ results: response.results });
+    } catch (error) {
+      console.error("Search error:", error);
+      set({ results: [] });
+    } finally {
+      set({ loading: false });
+    }
   },
 }));

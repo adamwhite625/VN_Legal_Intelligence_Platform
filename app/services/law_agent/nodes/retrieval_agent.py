@@ -19,10 +19,14 @@ from app.services.law_agent.state import (
 # Production-grade retrieval thresholds
 HARD_THRESHOLD = 0.60  # Reject garbage results
 
-# Domain filtering for procedural queries
+# Domain filtering for all intent types
 DOMAIN_KEYWORDS = {
-    "SEARCH_PROCEDURE": ["Doanh nghiệp", "Hôn nhân", "Lao động", "Thuế"],
+    "SEARCH_PENAL": ["Hình sự", "Tội phạm", "Bộ luật Hình sự", "Bộ Luật Hình Sự"],
+    "SEARCH_CIVIL": ["Dân sự", "Dân thiếp", "Bộ luật Dân sự", "Hợp đồng", "Bất động sản", "Bộ Luật Dân Sự"],
+    "SEARCH_PROCEDURE": ["Doanh nghiệp", "Hôn nhân", "Lao động", "Thuế", "Tố tụng", "Hành chính"],
+    "SEARCH_MARRIAGE": ["Hôn nhân", "Gia đình", "Hôn nhân gia đình", "Luật Hôn nhân"],
     "SEARCH_CONSULTATION": [],  # Accept all domains
+    "NO_SEARCH": [],  # Accept all domains
 }
 
 
@@ -88,12 +92,11 @@ def retriever_node(state: LawAgentState) -> LawAgentState:
                 print(f"      ❌ Rejected: {score:.4f} < {HARD_THRESHOLD} (garbage)")
                 continue
             
-            # Domain filter only (avoid wrong law system)
-            if is_procedural:
-                domain_filter = DOMAIN_KEYWORDS.get(state.intent, [])
-                if domain_filter and not any(keyword in loai_van_ban for keyword in domain_filter):
-                    print(f"      ⚠️ Filtered: '{loai_van_ban}' (wrong domain for {state.intent})")
-                    continue
+            # Domain filter for all intents (get keywords from DOMAIN_KEYWORDS)
+            domain_filter = DOMAIN_KEYWORDS.get(state.intent, [])
+            if domain_filter and not any(keyword in loai_van_ban for keyword in domain_filter):
+                print(f"      ⚠️ Filtered: '{loai_van_ban}' (wrong domain for {state.intent})")
+                continue
             
             filtered_results.append(hit)
             print(f"      ✅ Kept: {score:.4f} | {so_hieu} ({loai_van_ban})")

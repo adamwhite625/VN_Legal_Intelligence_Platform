@@ -11,6 +11,26 @@ def sufficiency_checker_node(state: LawAgentState) -> LawAgentState:
     docs = state.retrieved_docs or []
     chat_history = state.chat_history or ""
     intent = state.intent or ""
+    has_law_context = state.has_law_context  # Use the flag from contextualize
+    
+    # Content/definition questions that don't need specifics
+    content_keywords = ["nội dung", "là gì", "định nghĩa", "khái niệm", "quy định", "quy định gì", "có nội dung gì", "bao gồm", "gồm những gì"]
+    is_content_question = any(keyword in query.lower() for keyword in content_keywords)
+    
+    # If law context is available and it's a content question, mark as SUFFICIENT
+    # The writer node will use the law context to answer
+    if has_law_context and is_content_question:
+        print(f"   -> Có ngữ cảnh luật + câu hỏi về nội dung → SUFFICIENT (sử dụng context)")
+        state.check_status = "SUFFICIENT"
+        state.node_trace.append("checker")
+        return state
+    
+    # If law context is available and no docs were retrieved, mark as SUFFICIENT
+    if has_law_context and not docs:
+        print(f"   -> Có ngữ cảnh luật sẵn → SUFFICIENT (sử dụng context)")
+        state.check_status = "SUFFICIENT"
+        state.node_trace.append("checker")
+        return state
     
     # ----------- LOGIC MỚI: Phân biệt MISSING_INFO vs NO_LAW -----------
     
@@ -36,7 +56,11 @@ def sufficiency_checker_node(state: LawAgentState) -> LawAgentState:
 
     # --- LOGIC MỚI: Auto-sufficient cho SEARCH_PROCEDURE ---
     is_procedural = state.intent == "SEARCH_PROCEDURE"
-    query_words = len(query.split())
+    # 🧹 CLEAN: Chỉ tính từ từ dòng đầu tiên (loại bỏ "Dựa trên văn bản...")
+    pure_query = (state.standalone_query or state.query).split("Dựa trên văn bản")[0].strip()
+    if not pure_query:
+        pure_query = (state.standalone_query or state.query).split("\n")[0].strip()
+    query_words = len(pure_query.split())
     
     if is_procedural and query_words >= 4:
         print(f"   -> Procedural general query ({query_words} words) → SUFFICIENT (auto)")

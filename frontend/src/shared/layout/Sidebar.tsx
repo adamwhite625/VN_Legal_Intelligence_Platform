@@ -12,8 +12,8 @@ export default function Sidebar() {
           🤖 AI Consultant
         </Link>
 
-        <Link to="/workspace" className="block p-2 rounded hover:bg-blue-100">
-          📁 Workspace
+        <Link to="/tracking" className="block p-2 rounded hover:bg-blue-100">
+          📚 Theo Dõi Pháp Lý
         </Link>
       </nav>
     </div>

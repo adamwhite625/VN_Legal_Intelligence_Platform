@@ -150,7 +150,7 @@ def run_scraper():
         with open("raw_law_data.json", "w", encoding="utf-8") as f:
             json.dump(final_result, f, ensure_ascii=False, indent=4)
         print("Đã lưu tất cả vào file: raw_law_data.json")
-        print("SẴN SÀNG! Hãy chạy 'python app/core/data_generator.py' để sinh bộ câu hỏi.")
+        print("Dữ liệu sẵn sàng để import vào Qdrant hoặc sử dụng cho tìm kiếm JSON.")
     else:
         print("Không lấy được dữ liệu nào.")
 

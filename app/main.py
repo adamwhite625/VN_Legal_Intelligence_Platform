@@ -7,8 +7,8 @@ from app.core.limiter import limiter
 
 from app.core.config import settings
 from app.api.v1.api import api_router
-
 from app.core.clients import init_clients, close_clients
+from app.exceptions import setup_exception_handlers
 
 from contextlib import asynccontextmanager
 
@@ -54,6 +54,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Setup custom exception handlers
+setup_exception_handlers(app)
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 

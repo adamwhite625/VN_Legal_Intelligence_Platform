@@ -1,2 +1,20 @@
-from app.models import User, ChatSession, Message, Base  # Import từ models.py hiện tại
-# File này giúp gom các model lại một chỗ, tiện cho việc quản lý sau này
+from app.models import (
+    User,
+    ChatSession,
+    Message,
+    MessageSummary,
+    SavedLaw,
+    SavedQuestion,
+)
+from app.db.session import Base
+
+# Centralized imports for all models
+__all__ = [
+    "User",
+    "ChatSession",
+    "Message",
+    "MessageSummary",
+    "SavedLaw",
+    "SavedQuestion",
+    "Base",
+]
