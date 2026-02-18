@@ -6,7 +6,14 @@ export default function Navbar() {
 
   return (
     <div className="h-16 bg-white shadow flex items-center px-6 justify-between">
-      <h1 className="text-xl font-bold text-blue-600">VN Legal AI</h1>
+      <div className="flex items-center gap-3">
+        <img
+          src="/vn-emblem.jpg"
+          alt="VN Emblem"
+          className="h-10 w-10 rounded-full"
+        />
+        <h1 className="text-xl font-bold text-blue-600">VN Legal AI</h1>
+      </div>
 
       <div className="flex items-center gap-4">
         {token && user ? (

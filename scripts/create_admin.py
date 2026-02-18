@@ -1,61 +1,89 @@
+"""
+Create an admin account for Legal Chatbot.
+Run: python scripts/create_admin.py
+"""
+
 import sys
-import os
+from pathlib import Path
 
-# Thêm đường dẫn hiện tại vào sys.path
-sys.path.append(os.getcwd())
+# Allow importing app modules
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+from app.db.session import SessionLocal, engine, Base
 from app import models
-from app.core import security
+from app.core.security import get_password_hash
 
-# Cấu hình kết nối
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:legalbot_password@localhost:3306/law_chatbot_db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+def get_input():
+    email = input("Admin email: ").strip()
+    if "@" not in email:
+        raise ValueError("Invalid email.")
 
-# ======================================================
-# 🔥 THÊM DÒNG NÀY ĐỂ TẠO BẢNG TRƯỚC KHI TẠO ADMIN 🔥
-# ======================================================
-models.Base.metadata.create_all(bind=engine)
-# ======================================================
+    full_name = input("Full name (optional): ").strip() or None
 
-def create_super_admin():
-    db = SessionLocal()
+    password = input("Password (>=6 chars): ").strip()
+    if len(password) < 6:
+        raise ValueError("Password too short.")
+
+    confirm = input("Confirm password: ").strip()
+    if password != confirm:
+        raise ValueError("Passwords do not match.")
+
+    return email, full_name, password
+
+
+def create_admin():
+    print("\n=== CREATE ADMIN ACCOUNT ===\n")
+
+    # Ensure tables exist
+    Base.metadata.create_all(bind=engine)
+
     try:
-        print("--- TẠO TÀI KHOẢN ADMIN ---")
-        email = input("Nhập Email: ")
-        password = input("Nhập Mật khẩu: ")
-        full_name = input("Nhập Họ tên: ")
+        email, full_name, password = get_input()
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 
-        # 1. Kiểm tra xem email đã có chưa
-        user = db.query(models.User).filter(models.User.email == email).first()
-        
+    db: Session = SessionLocal()
+
+    try:
+        user = db.query(models.User).filter_by(email=email).first()
+
         if user:
-            print(f"⚠️ User {email} đã tồn tại!")
-            confirm = input("Bạn có muốn nâng quyền user này lên ADMIN không? (y/n): ")
-            if confirm.lower() == 'y':
+            choice = input("User exists. Promote to admin? (y/n): ").lower()
+            if choice == "y":
                 user.role = "admin"
                 db.commit()
-                print(f"✅ Đã nâng cấp {email} thành ADMIN!")
-        else:
-            # 2. Tạo Admin mới
-            hashed_password = security.get_password_hash(password)
-            new_admin = models.User(
-                email=email,
-                hashed_password=hashed_password,
-                full_name=full_name,
-                role="admin" 
-            )
-            db.add(new_admin)
-            db.commit()
-            print(f"✅ Đã tạo thành công Admin: {email}")
+                print("User promoted to admin.")
+                return True
+            return False
+
+        admin = models.User(
+            email=email,
+            hashed_password=get_password_hash(password),
+            full_name=full_name,
+            role="admin",
+        )
+
+        db.add(admin)
+        db.commit()
+        db.refresh(admin)
+
+        print("\nAdmin created successfully!")
+        print(f"Email: {admin.email}")
+        print(f"ID: {admin.id}")
+
+        return True
 
     except Exception as e:
-        print(f"❌ Lỗi: {e}")
+        db.rollback()
+        print(f"Database error: {e}")
+        return False
+
     finally:
         db.close()
 
+
 if __name__ == "__main__":
-    create_super_admin()
+    sys.exit(0 if create_admin() else 1)

@@ -41,6 +41,8 @@ class LawAgentState(BaseModel):
     query: str
     standalone_query: Optional[str] = None
     chat_history: Optional[str] = None
+    has_law_context: bool = False  # Track if law context is present
+    law_context: Optional[str] = None  # Store extracted law context
 
     # ----------------------
     # Router Reasoning

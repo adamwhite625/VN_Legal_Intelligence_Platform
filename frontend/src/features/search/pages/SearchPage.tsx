@@ -1,47 +1,35 @@
 import MainLayout from "@/shared/layout/MainLayout";
 import SearchBar from "../components/SearchBar";
-import FilterPanel from "../components/FilterPanel";
 import ResultList from "../components/ResultList";
+import BrowseCategories from "../components/BrowseCategories";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useSearchStore } from "../model/searchStore";
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { keyword, type, year, authority, setKeyword, setFilter } =
-    useSearchStore();
+  const { keyword, setKeyword } = useSearchStore();
+
   useEffect(() => {
     const urlKeyword = searchParams.get("keyword") || "";
-    const urlType = searchParams.get("type") || "";
-    const urlYear = searchParams.get("year") || "";
-    const urlAuthority = searchParams.get("authority") || "";
 
-    setKeyword(urlKeyword);
-    setFilter("type", urlType);
-    setFilter("year", urlYear);
-    setFilter("authority", urlAuthority);
+    if (urlKeyword) setKeyword(urlKeyword);
   }, []);
 
   useEffect(() => {
     setSearchParams({
       keyword,
-      type,
-      year,
-      authority,
     });
-  }, [keyword, type, year, authority]);
+  }, [keyword, setSearchParams]);
 
   return (
     <MainLayout>
-      <div className="grid grid-cols-4 gap-6">
-        <div className="bg-white p-4 rounded-xl shadow">
-          <FilterPanel />
-        </div>
+      <div className="space-y-6">
+        {/* Search Bar - Full Width */}
+        <SearchBar />
 
-        <div className="col-span-3 space-y-6">
-          <SearchBar />
-          <ResultList />
-        </div>
+        {/* Results or Categories */}
+        {keyword.trim() ? <ResultList /> : <BrowseCategories />}
       </div>
     </MainLayout>
   );

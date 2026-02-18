@@ -10,6 +10,18 @@ def fallback_node(state: LawAgentState) -> LawAgentState:
     status = state.check_status or "NO_LAW"
     query = state.standalone_query or state.query
     docs = state.retrieved_docs or []
+    has_law_context = state.has_law_context  # Use the flag from contextualize
+    law_context = state.law_context  # Use the extracted law context
+    
+    # Content keywords  
+    content_keywords = ["nội dung", "là gì", "định nghĩa", "khái niệm", "quy định", "quy định gì", "có nội dung gì", "bao gồm", "gồm những gì"]
+    is_content_question = any(keyword in query.lower() for keyword in content_keywords)
+    
+    # CASE 1: If law context and content question → Answer using the law context
+    if has_law_context and law_context and is_content_question:
+        print("📄 [FALLBACK]: Có ngữ cảnh luật + câu hỏi nội dung → Sử dụng Writer...")
+        from app.services.law_agent.nodes.writer_agent import answer_node
+        return answer_node(state)
     
     # TRƯỜNG HỢP 1: KHÔNG TÌM THẤY LUẬT
     if status == "NO_LAW" or not docs:
