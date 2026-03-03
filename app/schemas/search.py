@@ -35,6 +35,7 @@ class SearchResponse(BaseModel):
     results: List[LawItem]
     total: int
     filters_applied: Optional[SearchFilters] = None
+    source: Optional[str] = None  # "redis_cache" or "search"
 
 
 class LawDetailResponse(BaseModel):

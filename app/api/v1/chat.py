@@ -29,7 +29,7 @@ async def chat_with_lawyer(
         input_data=input_data,
     )
 
-@router.get("/sessions")
+@router.get("/sessions", response_model=list[schemas.SessionResponse])
 def read_sessions(
     skip: int = 0, limit: int = 100, 
     db: Session = Depends(deps.get_db),
@@ -66,7 +66,7 @@ def get_summaries(
         user_id=current_user.id,
     )
 
-@router.post("/session/start")
+@router.post("/session/start", response_model=schemas.SessionResponse)
 def start_session(
     session_type: str = "general",
     law_id: str = None,

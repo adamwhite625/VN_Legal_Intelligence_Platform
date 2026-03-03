@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  # 1. Dịch vụ Database MySQL
+  # 1. MySQL
   db_mysql:
     image: mysql:8.0
     container_name: law_mysql_container
@@ -12,12 +12,12 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql # Lưu dữ liệu ra thư mục mysql_data để không bị mất khi tắt Docker
+      - law_mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     networks:
       - law_network
 
-  # 2. Dịch vụ Vector Database Qdrant
+  # 2. Qdrant
   qdrant:
     image: qdrant/qdrant:latest
     container_name: law_qdrant_container
@@ -26,10 +26,33 @@ services:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - ./qdrant_data:/qdrant/storage # Lưu dữ liệu vector ra thư mục qdrant_data
+      - law_qdrant_data:/qdrant/storage
     networks:
       - law_network
+
+  # 3. Redis
+  redis:
+    image: redis:7-alpine
+    container_name: law_redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - law_redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - law_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 networks:
   law_network:
     driver: bridge
+
+volumes:
+  law_mysql_data:
+  law_qdrant_data:
+  law_redis_data:

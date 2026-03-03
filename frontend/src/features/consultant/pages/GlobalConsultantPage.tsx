@@ -1,7 +1,20 @@
+import { useState } from "react";
 import MainLayout from "@/shared/layout/MainLayout";
 import ConsultantPanel from "../components/ConsultantPanel";
+import SessionHistoryPanel from "../components/SessionHistoryPanel";
+import { useConsultantStore } from "../model/consultantStore";
 
 export default function GlobalConsultantPage() {
+  const { loadSessionHistory } = useConsultantStore();
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
+    null,
+  );
+
+  const handleSelectSession = async (sessionId: number) => {
+    setSelectedSessionId(sessionId);
+    await loadSessionHistory(sessionId);
+  };
+
   return (
     <MainLayout>
       <div className="h-[calc(100vh-6rem)] grid grid-cols-3 gap-6">
@@ -10,19 +23,9 @@ export default function GlobalConsultantPage() {
           <ConsultantPanel context="" contextType="general" />
         </div>
 
-        {/* Tracking Panel */}
-        <div className="bg-white rounded-xl shadow p-4 overflow-y-auto">
-          <h3 className="font-semibold mb-4">Lịch sử</h3>
-          <div className="text-sm text-gray-500 space-y-4">
-            <div>
-              <p className="font-medium text-gray-700 mb-2">Câu hỏi đã lưu</p>
-              <p className="text-xs">Hiển thị các câu hỏi bạn đã lưu</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-700 mb-2">📖 Luật đã lưu</p>
-              <p className="text-xs">Hiển thị các luật bạn đã lưu</p>
-            </div>
-          </div>
+        {/* Session History Panel */}
+        <div>
+          <SessionHistoryPanel onSelectSession={handleSelectSession} />
         </div>
       </div>
     </MainLayout>
