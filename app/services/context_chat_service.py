@@ -15,11 +15,13 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import Optional, List, Dict, Any
 import json
+import hashlib
 
 from app import models, schemas
 from app.services.law_agent.graph import app as agent_app
 from app.services.law_agent.title_generator import generate_chat_title
 from app.services.json_search_service import get_json_law_detail
+from app.core.redis_client import cache_get, cache_set
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +30,27 @@ class ContextAwareChatService:
     """Service xử lý context-aware chat"""
 
     SUMMARY_THRESHOLD = 5  # Summarize mỗi 5 tin nhắn
+
+    @staticmethod
+    def _generate_cache_key(query: str, context_type: str, law_id: Optional[str] = None) -> str:
+        """
+        Tạo cache key cho chat response
+        Hash query để tạo key duy nhất
+        
+        Examples:
+            chat:law-detail:Điều 1:abc123def456...
+            chat:general:dân sự:xyz789uvw012...
+        """
+        # Normalize query (lowercase, strip whitespace)
+        normalized_query = query.strip().lower()
+        
+        # Hash the query to create a short key
+        query_hash = hashlib.md5(normalized_query.encode()).hexdigest()[:12]
+        
+        if context_type == "law-detail" and law_id:
+            return f"chat:{context_type}:{law_id}:{query_hash}"
+        else:
+            return f"chat:{context_type}:{query_hash}"
 
     @staticmethod
     async def process_context_chat(
@@ -97,30 +120,61 @@ class ContextAwareChatService:
         )
 
         # -------------------------
-        # 5. Call agent
+        # 5. Check Redis cache for response
         # -------------------------
-        try:
-            inputs = {
-                "query": prompt,
-                "chat_history": chat_history_text,
-            }
+        cache_key = ContextAwareChatService._generate_cache_key(
+            query=input_data.query,
+            context_type=input_data.context_type,
+            law_id=input_data.law_id
+        )
+        
+        cached_response = cache_get(cache_key)
+        response_source = "agent"  # Track source for logging
+        
+        if cached_response:
+            # Cache hit! Use cached response
+            print(f"✓ Chat cache HIT for query: {input_data.query[:50]}...")
+            # Handle both dict and JSON string from cache
+            if isinstance(cached_response, str):
+                cached_data = json.loads(cached_response)
+            else:
+                cached_data = cached_response
+            final_answer = cached_data.get("answer", "")
+            formatted_sources = cached_data.get("sources", [])
+            response_source = "cache"
+        else:
+            # Cache miss - call agent
+            print(f"○ Chat cache MISS for query: {input_data.query[:50]}..., calling AI...")
+            try:
+                inputs = {
+                    "query": prompt,
+                    "chat_history": chat_history_text,
+                }
 
-            output = await agent_app.ainvoke(inputs)
+                output = await agent_app.ainvoke(inputs)
 
-            final_answer = output.get(
-                "generation",
-                "Xin lỗi, tôi không thể xử lý yêu cầu này."
-            )
+                final_answer = output.get(
+                    "generation",
+                    "Xin lỗi, tôi không thể xử lý yêu cầu này."
+                )
 
-            raw_sources = output.get("sources", [])
-            formatted_sources = raw_sources if raw_sources else []
+                raw_sources = output.get("sources", [])
+                formatted_sources = raw_sources if raw_sources else []
+                
+                # Store response in cache (24 hours TTL)
+                cache_data = {
+                    "answer": final_answer,
+                    "sources": formatted_sources
+                }
+                cache_set(cache_key, json.dumps(cache_data), ttl=86400)
+                print(f"✓ Chat response cached (24h TTL)")
 
-        except Exception as e:
-            logger.error(f"Agent error: {str(e)}", exc_info=True)
-            raise HTTPException(
-                status_code=500,
-                detail=f"AI service error: {str(e)}"
-            )
+            except Exception as e:
+                logger.error(f"Agent error: {str(e)}", exc_info=True)
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"AI service error: {str(e)}"
+                )
 
         # -------------------------
         # 6. Persist messages
@@ -182,6 +236,7 @@ class ContextAwareChatService:
             sources=formatted_sources,
             session_id=session.id,
             message_id=bot_msg.id,
+            source=response_source,
         )
 
     @staticmethod

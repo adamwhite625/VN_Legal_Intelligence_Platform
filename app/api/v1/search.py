@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, Literal
 from sqlalchemy.orm import Session
+import json
 
 from app.schemas.search import SearchQuery, SearchResponse, LawDetailResponse
 from app.services.search_service import search_laws, get_law_detail
@@ -9,6 +10,7 @@ from app.services.tracking_service import TrackingService
 from app.utils.slug_generator import create_law_slug
 from app import models
 from app.api.v1 import deps
+from app.core.redis_client import cache_search_results, get_cached_search
 
 router = APIRouter()
 
@@ -32,8 +34,26 @@ async def search(
     - Filter by year
     - Filter by authority
     - Filter by article number
+    
+    Results are cached with 1-hour TTL for fast repeated searches
     """
     try:
+        # Create cache key based on search parameters
+        cache_key = f"{keyword}|{mode}|{type_filter}|{year_filter}|{authority_filter}|{limit}"
+        
+        # Check if results are in Redis cache
+        cached_results = get_cached_search(cache_key, mode)
+        if cached_results:
+            print(f"✓ Search cache HIT for keyword: {keyword}")
+            return SearchResponse(
+                results=cached_results,
+                total=len(cached_results),
+                source="redis_cache"
+            )
+        
+        print(f"○ Search cache MISS for keyword: {keyword}, searching...")
+        
+        # Perform search
         if mode == "fast":
             results = search_json_laws(
                 keyword=keyword,
@@ -51,9 +71,13 @@ async def search(
                 limit=limit,
             )
 
+        # Cache results (1 hour TTL = 3600 seconds)
+        cache_search_results(cache_key, mode, results, ttl=3600)
+
         return SearchResponse(
             results=results,
             total=len(results),
+            source="search"
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")

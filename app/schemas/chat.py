@@ -15,6 +15,7 @@ class ChatResponse(BaseModel):
     sources: List[str]
     session_id: int
     message_id: int
+    source: Optional[str] = None  # "cache" or "agent"
 
 
 class MessageWithContext(BaseModel):

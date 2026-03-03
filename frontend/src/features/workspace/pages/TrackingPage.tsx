@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/shared/layout/MainLayout";
 import { useTrackingStore } from "@/features/search/model/trackingStore";
+import { useConsultantStore } from "@/features/consultant/model/consultantStore";
 
 export default function TrackingPage() {
   const navigate = useNavigate();
@@ -14,18 +15,27 @@ export default function TrackingPage() {
     stats,
   } = useTrackingStore();
 
-  const [activeTab, setActiveTab] = useState<"laws" | "questions" | "stats">(
-    "laws",
-  );
+  const { sessions, loadSessions, removeSessions, loadSessionHistory } =
+    useConsultantStore();
+
+  const [activeTab, setActiveTab] = useState<
+    "laws" | "questions" | "stats" | "chats"
+  >("laws");
   const [loading, setLoading] = useState(true);
+  const [expandedSessionId, setExpandedSessionId] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([loadSavedLaws(), loadSavedQuestions(), loadStats()]).finally(
-      () => {
-        setLoading(false);
-      },
-    );
+    Promise.all([
+      loadSavedLaws(),
+      loadSavedQuestions(),
+      loadStats(),
+      loadSessions(),
+    ]).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   if (loading) {
@@ -52,10 +62,10 @@ export default function TrackingPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-6 border-b">
+        <div className="flex gap-4 mb-6 border-b overflow-x-auto">
           <button
             onClick={() => setActiveTab("laws")}
-            className={`px-4 py-2 font-medium transition ${
+            className={`px-4 py-2 font-medium transition whitespace-nowrap ${
               activeTab === "laws"
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-600 hover:text-gray-900"
@@ -65,7 +75,7 @@ export default function TrackingPage() {
           </button>
           <button
             onClick={() => setActiveTab("questions")}
-            className={`px-4 py-2 font-medium transition ${
+            className={`px-4 py-2 font-medium transition whitespace-nowrap ${
               activeTab === "questions"
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-600 hover:text-gray-900"
@@ -74,8 +84,18 @@ export default function TrackingPage() {
             💬 Câu Hỏi ({savedQuestions.length})
           </button>
           <button
+            onClick={() => setActiveTab("chats")}
+            className={`px-4 py-2 font-medium transition whitespace-nowrap ${
+              activeTab === "chats"
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            📋 Lịch sử Chat ({sessions.length})
+          </button>
+          <button
             onClick={() => setActiveTab("stats")}
-            className={`px-4 py-2 font-medium transition ${
+            className={`px-4 py-2 font-medium transition whitespace-nowrap ${
               activeTab === "stats"
                 ? "border-b-2 border-blue-600 text-blue-600"
                 : "text-gray-600 hover:text-gray-900"
@@ -187,6 +207,86 @@ export default function TrackingPage() {
                   >
                     → Xem luật liên quan
                   </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === "chats" && (
+          <div className="space-y-4">
+            {sessions.length === 0 ? (
+              <div className="bg-white p-8 rounded-lg text-center text-gray-500">
+                Chưa có phiên chat nào được lưu
+              </div>
+            ) : (
+              sessions.map((session) => (
+                <div key={session.id} className="bg-white rounded-lg border">
+                  <div
+                    onClick={() =>
+                      setExpandedSessionId(
+                        expandedSessionId === session.id ? null : session.id,
+                      )
+                    }
+                    className="p-4 cursor-pointer hover:bg-gray-50 transition"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg text-gray-900">
+                          {session.title ||
+                            `Chat ${new Date(session.created_at).toLocaleDateString()}`}
+                        </h3>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
+                            {session.session_type === "law-detail"
+                              ? "📖 Chat về luật"
+                              : "🤖 AI Consultant"}
+                          </span>
+                          {session.law_id && (
+                            <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
+                              Luật: {session.law_id}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right ml-4">
+                        <p className="text-xs text-gray-500 mb-1">
+                          Tạo:{" "}
+                          {new Date(session.created_at).toLocaleDateString()}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Cập nhật:{" "}
+                          {new Date(session.updated_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {expandedSessionId === session.id && (
+                    <div className="border-t px-4 py-3 bg-gray-50 space-y-2">
+                      <button
+                        onClick={async () => {
+                          await loadSessionHistory(session.id);
+                          navigate("/consultant");
+                        }}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition text-sm"
+                      >
+                        💬 Xem chi tiết chat
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (
+                            confirm("Bạn có chắc chắn muốn xóa phiên chat này?")
+                          ) {
+                            await removeSessions(session.id);
+                          }
+                        }}
+                        className="w-full bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded transition text-sm"
+                      >
+                        🗑️ Xóa phiên chat
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             )}

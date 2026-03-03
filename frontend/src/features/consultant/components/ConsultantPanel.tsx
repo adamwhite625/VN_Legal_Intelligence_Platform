@@ -17,7 +17,7 @@ export default function ConsultantPanel({
   lawId,
 }: Props) {
   const { token } = useAuthStore();
-  const { messages, sendMessage, loading, initSession } = useConsultantStore();
+  const { messages, sendMessage, loading, setupContext } = useConsultantStore();
   const { saveQuestion } = useTrackingStore();
 
   const [input, setInput] = useState("");
@@ -27,10 +27,10 @@ export default function ConsultantPanel({
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [questionNotes, setQuestionNotes] = useState("");
 
-  // Init session when component mounts
+  // Setup context when component mounts (don't create session yet)
   useEffect(() => {
-    initSession(contextType, lawId);
-  }, [contextType, lawId, initSession]);
+    setupContext(contextType, lawId);
+  }, [contextType, lawId, setupContext]);
 
   const handleSend = async () => {
     if (!input.trim()) return;

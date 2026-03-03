@@ -7,14 +7,19 @@ Production-ready:
 - Fail-fast strategy
 """
 
+import logging
 from typing import Optional
+import time
 
 from qdrant_client import QdrantClient
-from qdrant_client.http.exceptions import UnexpectedResponse
+from qdrant_client.http.exceptions import UnexpectedResponse, ResponseHandlingException
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 
 from app.core.config import settings
+from app.core import redis_client
+
+logger = logging.getLogger(__name__)
 
 
 _qdrant_client: Optional[QdrantClient] = None
@@ -42,27 +47,48 @@ def init_clients() -> None:
         raise RuntimeError("COLLECTION_NAME is not configured.")
 
     # ---------------------------
-    # Initialize Qdrant
+    # Initialize Qdrant (with retry)
     # ---------------------------
 
     if _qdrant_client is None:
-        _qdrant_client = QdrantClient(
-            host=settings.QDRANT_HOST,
-            port=settings.QDRANT_PORT,
-        )
-
-        # Validate collection existence
-        try:
-            collections = _qdrant_client.get_collections().collections
-            collection_names = [c.name for c in collections]
-
-            if settings.COLLECTION_NAME not in collection_names:
-                raise RuntimeError(
-                    f"Qdrant collection '{settings.COLLECTION_NAME}' does not exist."
+        max_retries = 5
+        retry_delay = 2
+        
+        for attempt in range(max_retries):
+            try:
+                _qdrant_client = QdrantClient(
+                    host=settings.QDRANT_HOST,
+                    port=settings.QDRANT_PORT,
+                    timeout=5.0,
                 )
 
-        except UnexpectedResponse as e:
-            raise RuntimeError(f"Failed to connect to Qdrant: {str(e)}")
+                # Test connection
+                collections = _qdrant_client.get_collections().collections
+                collection_names = [c.name for c in collections]
+
+                if settings.COLLECTION_NAME not in collection_names:
+                    logger.warning(
+                        f"Qdrant collection '{settings.COLLECTION_NAME}' does not exist. "
+                        f"Available collections: {collection_names}"
+                    )
+                else:
+                    logger.info(f"✓ Connected to Qdrant, found collection: {settings.COLLECTION_NAME}")
+                
+                break  # Successfully connected
+
+            except (ResponseHandlingException, UnexpectedResponse, Exception) as e:
+                if attempt < max_retries - 1:
+                    logger.warning(
+                        f"Qdrant connection attempt {attempt + 1}/{max_retries} failed: {str(e)}. "
+                        f"Retrying in {retry_delay}s..."
+                    )
+                    time.sleep(retry_delay)
+                else:
+                    logger.error(
+                        f"Failed to connect to Qdrant after {max_retries} attempts. "
+                        f"Proceeding with JSON-based search only."
+                    )
+                    _qdrant_client = None  # Set to None so JSON search is used instead
 
     # ---------------------------
     # Initialize Embeddings
@@ -83,13 +109,20 @@ def init_clients() -> None:
             api_key=settings.OPENAI_API_KEY,
             temperature=settings.OPENAI_TEMPERATURE,
         )
+        logger.info("✓ LLM initialized successfully")
+
+    # ---------------------------
+    # Initialize Redis
+    # ---------------------------
+    redis_client.init_redis()
+
 
 def close_clients() -> None:
     """
-    Gracefully close external resources if needed.
-    Currently Qdrant and OpenAI clients do not require manual close.
+    Gracefully close external resources.
     """
-    pass
+    redis_client.close_redis()
+    logger.info("All clients closed")
 
 def get_qdrant_client() -> QdrantClient:
     if _qdrant_client is None:

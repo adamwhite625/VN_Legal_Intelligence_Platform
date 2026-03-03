@@ -3,7 +3,10 @@ import {
   sendChatMessage,
   startSession,
   getSessionHistory,
+  getSessions,
+  deleteSession,
   type ChatResponse,
+  type ChatSession,
 } from "../api/consultantApi";
 
 interface Message {
@@ -13,8 +16,18 @@ interface Message {
   sources?: string[];
 }
 
+interface SessionListItem {
+  id: number;
+  session_type: string;
+  law_id?: string;
+  title?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 interface ConsultantState {
   messages: Message[];
+  sessions: SessionListItem[];
   loading: boolean;
   currentSessionId: number | null;
   contextType: "general" | "law-detail";
@@ -26,15 +39,18 @@ interface ConsultantState {
     lawId?: string,
   ) => Promise<void>;
   resetMessages: () => void;
-  initSession: (
+  setupContext: (
     contextType?: "general" | "law-detail",
     lawId?: string,
-  ) => Promise<void>;
+  ) => void; // Changed: just setup context, don't create session
   loadSessionHistory: (sessionId: number) => Promise<void>;
+  loadSessions: (skip?: number, limit?: number) => Promise<void>;
+  removeSessions: (sessionId: number) => Promise<void>;
 }
 
 export const useConsultantStore = create<ConsultantState>((set, get) => ({
   messages: [],
+  sessions: [],
   loading: false,
   currentSessionId: null,
   contextType: "general",
@@ -42,18 +58,33 @@ export const useConsultantStore = create<ConsultantState>((set, get) => ({
 
   resetMessages: () => set({ messages: [] }),
 
-  initSession: async (contextType = "general", lawId) => {
+  loadSessions: async (skip = 0, limit = 100) => {
     try {
-      const session = await startSession(contextType, lawId);
-      set({
-        currentSessionId: session.id,
-        contextType,
-        currentLawId: lawId || null,
-        messages: [],
-      });
+      const sessions = await getSessions(skip, limit);
+      set({ sessions });
     } catch (error) {
-      console.error("Failed to init session:", error);
+      console.error("Failed to load sessions:", error);
     }
+  },
+
+  removeSessions: async (sessionId: number) => {
+    try {
+      await deleteSession(sessionId);
+      // Reload sessions after deletion
+      const state = get();
+      await state.loadSessions();
+    } catch (error) {
+      console.error("Failed to delete session:", error);
+    }
+  },
+
+  // Changed: Just setup context without creating session
+  setupContext: (contextType = "general", lawId) => {
+    set({
+      contextType,
+      currentLawId: lawId || null,
+      messages: [], // Clear messages when switching context
+    });
   },
 
   loadSessionHistory: async (sessionId) => {
@@ -86,13 +117,15 @@ export const useConsultantStore = create<ConsultantState>((set, get) => ({
     try {
       const state = get();
 
-      // Init session if not exists
-      if (!state.currentSessionId) {
+      // Create session only when sending first message (lazy creation)
+      let sessionId = state.currentSessionId;
+      if (!sessionId) {
         const session = await startSession(
           state.contextType,
           lawId || state.currentLawId || undefined,
         );
-        set({ currentSessionId: session.id });
+        sessionId = session.id;
+        set({ currentSessionId: sessionId });
       }
 
       const fullQuestion = context
@@ -102,7 +135,7 @@ export const useConsultantStore = create<ConsultantState>((set, get) => ({
       const data: ChatResponse = await sendChatMessage(
         fullQuestion,
         state.contextType,
-        state.currentSessionId || undefined,
+        sessionId,
         state.currentLawId || lawId || undefined,
       );
 
