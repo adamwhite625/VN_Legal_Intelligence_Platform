@@ -17,10 +17,11 @@ async def search_laws(
     type_filter: Optional[str] = None,
     year_filter: Optional[str] = None,
     authority_filter: Optional[str] = None,
+    skip: int = 0,
     limit: int = 20,
 ) -> List[LawItem]:
     """
-    Search laws from Qdrant database.
+    Search laws from Qdrant database with pagination support.
     """
     try:
         qdrant = get_qdrant_client()
@@ -29,11 +30,14 @@ async def search_laws(
         # Embed query
         query_vector = embeddings.embed_query(keyword)
 
+        # Fetch more results to account for skip offset
+        fetch_limit = skip + limit
+
         # Search in Qdrant
         results = qdrant.query_points(
             collection_name=settings.COLLECTION_NAME,
             query=query_vector,
-            limit=limit,
+            limit=fetch_limit,
             with_payload=True,
         ).points
 
@@ -63,7 +67,10 @@ async def search_laws(
 
             laws.append(law)
 
-        return laws
+        # Apply skip and limit
+        paginated_laws = laws[skip:skip + limit]
+
+        return paginated_laws
 
     except Exception as e:
         logger.error(f"Search error: {str(e)}", exc_info=True)

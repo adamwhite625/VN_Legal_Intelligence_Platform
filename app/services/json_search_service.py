@@ -50,11 +50,12 @@ def search_json_laws(
     type_filter: Optional[str] = None,
     year_filter: Optional[str] = None,
     authority_filter: Optional[str] = None,
+    skip: int = 0,
     limit: int = 20,
 ) -> List[LawItem]:
     """
     Fast search in JSON data by keyword (title, content, law_name).
-    Returns exact matches and partial matches.
+    Returns exact matches and partial matches with pagination support.
     """
     try:
         data = load_json_data()
@@ -102,11 +103,14 @@ def search_json_laws(
             
             results.append(law)
             
-            if len(results) >= limit:
+            if len(results) >= skip + limit:
                 break
         
-        logger.info(f"JSON search for '{keyword}' returned {len(results)} results")
-        return results
+        # Apply skip and limit
+        paginated_results = results[skip:skip + limit]
+        
+        logger.info(f"JSON search for '{keyword}' returned {len(paginated_results)} results (skip={skip}, limit={limit})")
+        return paginated_results
     
     except Exception as e:
         logger.error(f"JSON search error: {str(e)}", exc_info=True)

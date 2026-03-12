@@ -8,13 +8,13 @@ interface Props {
 
 export default function MainLayout({ children }: Props) {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       <Navbar />
 
-      <div className="flex">
+      <div className="flex mt-16">
         <Sidebar />
 
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-8">{children}</main>
       </div>
     </div>
   );

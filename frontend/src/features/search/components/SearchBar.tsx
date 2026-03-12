@@ -15,7 +15,7 @@ export default function SearchBar() {
         <input
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="w-full p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-lg"
+          className="w-full p-4 rounded-lg bg-white border-2 border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 text-lg"
           placeholder="Nhập từ khóa: Điều, luật, quyền, ..."
         />
         {keyword && (

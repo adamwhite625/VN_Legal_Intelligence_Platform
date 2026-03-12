@@ -5,7 +5,8 @@ import { useState } from "react";
 import { saveLawAndCreateSession } from "../api/searchApi";
 
 export default function ResultList() {
-  const { results, keyword, loading } = useSearchStore();
+  const { results, keyword, loading, loadingMore, hasMore, loadMore } =
+    useSearchStore();
   const { saveLaw } = useTrackingStore();
   const navigate = useNavigate();
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -73,81 +74,110 @@ export default function ResultList() {
   }
 
   return (
-    <div className="space-y-3">
-      <div className="text-sm text-gray-600 mb-4">
+    <div className="space-y-6">
+      <div className="text-sm text-gray-600">
         Tìm thấy <strong>{results.length}</strong> kết quả
       </div>
-      {results.map((law) => (
-        <div key={law.id} className="flex gap-3 items-start">
-          <Link to={`/law/${law.id}?keyword=${keyword}`} className="flex-1">
-            <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer border border-gray-100 hover:border-blue-400">
-              <div className="mb-2">
-                {law.id && (
-                  <div className="inline-block bg-blue-600 text-white px-3 py-1.5 rounded text-sm font-semibold">
-                    {law.id}
-                  </div>
-                )}
-              </div>
 
-              <h3 className="font-bold text-gray-900 text-lg leading-snug mb-2 line-clamp-2">
-                {law.title}
-              </h3>
+      <div className="space-y-3">
+        {results.map((law) => (
+          <div key={law.id} className="flex gap-3 items-start">
+            <Link to={`/law/${law.id}?keyword=${keyword}`} className="flex-1">
+              <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer border border-gray-100 hover:border-blue-400">
+                <div className="mb-2">
+                  {law.id && (
+                    <div className="inline-block bg-blue-600 text-white px-3 py-1.5 rounded text-sm font-semibold">
+                      {law.id}
+                    </div>
+                  )}
+                </div>
 
-              <div className="flex flex-wrap gap-2 mb-3">
-                {law.year && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-gray-100 text-gray-700 font-medium">
-                    📅 {law.year}
+                <h3 className="font-bold text-gray-900 text-lg leading-snug mb-2 line-clamp-2">
+                  {law.title}
+                </h3>
+
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {law.year && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-gray-100 text-gray-700 font-medium">
+                      📅 {law.year}
+                    </span>
+                  )}
+                  {law.authority && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-green-50 text-green-700 font-medium">
+                      🏛️ {law.authority}
+                    </span>
+                  )}
+                  {law.type && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-orange-50 text-orange-700 font-medium">
+                      📄 {law.type}
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                  {law.description || law.content?.substring(0, 150)}
+                </p>
+
+                <div className="mt-3 flex items-center text-blue-600 text-sm font-medium group">
+                  <span>Xem chi tiết</span>
+                  <span className="ml-1 group-hover:translate-x-1 transition">
+                    →
                   </span>
-                )}
-                {law.authority && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-green-50 text-green-700 font-medium">
-                    🏛️ {law.authority}
-                  </span>
-                )}
-                {law.type && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-orange-50 text-orange-700 font-medium">
-                    📄 {law.type}
-                  </span>
-                )}
+                </div>
               </div>
+            </Link>
 
-              <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                {law.description || law.content?.substring(0, 150)}
-              </p>
+            <button
+              onClick={(e) => handleSaveLaw(e, law)}
+              disabled={savingId === law.id}
+              className={`px-3 py-3 rounded-lg h-fit font-bold text-lg transition whitespace-nowrap ${
+                savedLaws.has(law.id || "")
+                  ? "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+              } ${savingId === law.id ? "opacity-50 cursor-not-allowed" : ""}`}
+              title={
+                savedLaws.has(law.id || "")
+                  ? "Đã lưu - Click để chat về luật này"
+                  : "Lưu và chat về luật này"
+              }
+            >
+              {savingId === law.id ? (
+                <span className="inline-block animate-spin">⏳</span>
+              ) : savedLaws.has(law.id || "") ? (
+                "✓"
+              ) : (
+                "💾"
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
 
-              <div className="mt-3 flex items-center text-blue-600 text-sm font-medium group">
-                <span>Xem chi tiết</span>
-                <span className="ml-1 group-hover:translate-x-1 transition">
-                  →
-                </span>
-              </div>
-            </div>
-          </Link>
-
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="flex justify-center mt-8">
           <button
-            onClick={(e) => handleSaveLaw(e, law)}
-            disabled={savingId === law.id}
-            className={`px-3 py-3 rounded-lg h-fit font-bold text-lg transition whitespace-nowrap ${
-              savedLaws.has(law.id || "")
-                ? "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
-                : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-            } ${savingId === law.id ? "opacity-50 cursor-not-allowed" : ""}`}
-            title={
-              savedLaws.has(law.id || "")
-                ? "Đã lưu - Click để chat về luật này"
-                : "Lưu và chat về luật này"
-            }
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
           >
-            {savingId === law.id ? (
-              <span className="inline-block animate-spin">⏳</span>
-            ) : savedLaws.has(law.id || "") ? (
-              "✓"
+            {loadingMore ? (
+              <>
+                <span className="inline-block animate-spin mr-2">⏳</span>
+                Đang tải...
+              </>
             ) : (
-              "💾"
+              "Tải thêm ↓"
             )}
           </button>
         </div>
-      ))}
+      )}
+
+      {!hasMore && results.length > 0 && (
+        <div className="text-center text-gray-500 text-sm py-6">
+          Đã hiển thị toàn bộ {results.length} kết quả
+        </div>
+      )}
     </div>
   );
 }

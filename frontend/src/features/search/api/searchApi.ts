@@ -52,6 +52,7 @@ export async function searchLaws(
   year_filter?: string,
   authority_filter?: string,
   article_filter?: string,
+  skip: number = 0,
   limit: number = 20,
   mode: "fast" | "semantic" = "fast",
 ): Promise<SearchResponse> {
@@ -63,6 +64,7 @@ export async function searchLaws(
       year_filter,
       authority_filter,
       article_filter,
+      skip,
       limit,
     },
   });
@@ -83,9 +85,7 @@ export async function getLawDetail(
 
 // ============= SAVE LAW API =============
 
-export async function saveLawAndCreateSession(
-  lawId: string,
-): Promise<{
+export async function saveLawAndCreateSession(lawId: string): Promise<{
   message: string;
   saved_law_id: number;
   slug?: string;

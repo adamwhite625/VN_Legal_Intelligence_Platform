@@ -23,6 +23,7 @@ async def search(
     year_filter: Optional[str] = Query(None, description="Năm ban hành"),
     authority_filter: Optional[str] = Query(None, description="Cơ quan ban hành"),
     article_filter: Optional[str] = Query(None, description="Số điều"),
+    skip: int = Query(0, ge=0, description="Number of results to skip"),
     limit: int = Query(20, ge=1, le=100),
 ):
     """
@@ -35,23 +36,23 @@ async def search(
     - Filter by authority
     - Filter by article number
     
-    Results are cached with 1-hour TTL for fast repeated searches
+    Try to lookup by slug first if it looks like a slug (contains hyphens and lowercase)
     """
     try:
         # Create cache key based on search parameters
-        cache_key = f"{keyword}|{mode}|{type_filter}|{year_filter}|{authority_filter}|{limit}"
+        cache_key = f"{keyword}|{mode}|{type_filter}|{year_filter}|{authority_filter}|{skip}|{limit}"
         
         # Check if results are in Redis cache
         cached_results = get_cached_search(cache_key, mode)
         if cached_results:
-            print(f"✓ Search cache HIT for keyword: {keyword}")
+            print(f"✓ Search cache HIT for keyword: {keyword} (skip={skip})")
             return SearchResponse(
                 results=cached_results,
                 total=len(cached_results),
                 source="redis_cache"
             )
         
-        print(f"○ Search cache MISS for keyword: {keyword}, searching...")
+        print(f"○ Search cache MISS for keyword: {keyword} (skip={skip}), searching...")
         
         # Perform search
         if mode == "fast":
@@ -60,6 +61,7 @@ async def search(
                 type_filter=type_filter,
                 year_filter=year_filter,
                 authority_filter=authority_filter,
+                skip=skip,
                 limit=limit,
             )
         else:  # semantic
@@ -68,6 +70,7 @@ async def search(
                 type_filter=type_filter,
                 year_filter=year_filter,
                 authority_filter=authority_filter,
+                skip=skip,
                 limit=limit,
             )
 

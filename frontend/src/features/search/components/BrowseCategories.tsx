@@ -16,7 +16,7 @@ export default function BrowseCategories() {
   // 5 main laws from raw_law_data.json
   const [categories, setCategories] = useState<CategoryWithLaws[]>([
     {
-      name: "📜 Bộ luật Dân sự 2015",
+      name: "Bộ luật Dân sự 2015",
       lawName: "Bộ luật Dân sự 2015",
       icon: "📜",
       laws: [],
@@ -24,7 +24,7 @@ export default function BrowseCategories() {
       articleCount: 689,
     },
     {
-      name: "⚖️ Bộ luật Hình sự",
+      name: "Bộ luật Hình sự",
       lawName: "Bộ luật Hình sự (Văn bản hợp nhất 2017)",
       icon: "⚖️",
       laws: [],
@@ -32,7 +32,7 @@ export default function BrowseCategories() {
       articleCount: 416,
     },
     {
-      name: "💼 Luật Doanh nghiệp 2020",
+      name: "Luật Doanh nghiệp 2020",
       lawName: "Luật Doanh nghiệp 2020",
       icon: "💼",
       laws: [],
@@ -40,7 +40,7 @@ export default function BrowseCategories() {
       articleCount: 218,
     },
     {
-      name: "👨‍👩‍👧‍👦 Luật Hôn nhân và Gia đình 2014",
+      name: "Luật Hôn nhân và Gia đình 2014",
       lawName: "Luật Hôn nhân và Gia đình 2014",
       icon: "👨‍👩‍👧‍👦",
       laws: [],
@@ -48,7 +48,7 @@ export default function BrowseCategories() {
       articleCount: 133,
     },
     {
-      name: "👷 Bộ luật Lao động 2019",
+      name: "Bộ luật Lao động 2019",
       lawName: "Bộ luật Lao động 2019",
       icon: "👷",
       laws: [],
@@ -84,6 +84,7 @@ export default function BrowseCategories() {
         undefined,
         undefined,
         undefined,
+        0,
         6, // 6 articles per law category
         "fast",
       );
