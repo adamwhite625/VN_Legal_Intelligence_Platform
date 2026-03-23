@@ -18,7 +18,7 @@ router = APIRouter()
 @router.post("/search", response_model=SearchResponse)
 async def search(
     keyword: str = Query(..., min_length=1),
-    mode: Literal["fast", "semantic"] = Query("fast", description="fast=JSON file, semantic=Qdrant"),
+    mode: Literal["fast", "semantic"] = Query("fast", description="fast=JSON, semantic=Qdrant vector"),
     type_filter: Optional[str] = Query(None, description="Loại văn bản (Luật, Nghị định, etc.)"),
     year_filter: Optional[str] = Query(None, description="Năm ban hành"),
     authority_filter: Optional[str] = Query(None, description="Cơ quan ban hành"),
@@ -45,14 +45,14 @@ async def search(
         # Check if results are in Redis cache
         cached_results = get_cached_search(cache_key, mode)
         if cached_results:
-            print(f"✓ Search cache HIT for keyword: {keyword} (skip={skip})")
+            print(f"[HIT] Search cache HIT for keyword: {keyword} (skip={skip})")
             return SearchResponse(
                 results=cached_results,
                 total=len(cached_results),
                 source="redis_cache"
             )
         
-        print(f"○ Search cache MISS for keyword: {keyword} (skip={skip}), searching...")
+        print(f"[MISS] Search cache MISS for keyword: {keyword} (skip={skip}), searching...")
         
         # Perform search
         if mode == "fast":
@@ -83,7 +83,8 @@ async def search(
             source="search"
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")
+        error_msg = str(e).encode('ascii', errors='replace').decode('ascii')
+        raise HTTPException(status_code=500, detail=f"Search error: {error_msg}")
 
 
 @router.get("/laws/{law_id}", response_model=LawDetailResponse)

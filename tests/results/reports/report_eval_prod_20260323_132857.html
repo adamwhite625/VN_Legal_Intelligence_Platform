@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Evaluation Report - report_eval_prod_20260323_132857</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Courier, monospace; background: #1e1e1e; color: #e0e0e0; }
+        .container { max-width: 900px; margin: 20px auto; background: #2d2d2d; 
+                       padding: 30px; border-radius: 4px; border: 1px solid #444; }
+        header { border-bottom: 2px solid #0066cc; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: #0066cc; font-size: 1.8em; margin-bottom: 10px; }
+        .report-meta { font-size: 0.9em; color: #888; }
+        .report-meta p { margin: 3px 0; }
+        
+        .section { margin: 25px 0; }
+        .section-title { color: #0066cc; font-size: 1.1em; font-weight: bold; margin: 15px 0 12px 0; }
+        .metric-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.95em; }
+        .metric-name { min-width: 300px; }
+        .metric-value { font-weight: bold; }
+        
+        .quality-badge { display: inline-block; padding: 4px 12px; border-radius: 3px; 
+                          font-weight: bold; font-size: 0.9em; margin-top: 5px; margin-right: 10px; }
+        .status-pass { color: #28a745; }
+        .status-fail { color: #dc3545; }
+        .status-info { color: #0066cc; }
+        
+        .gates-section { padding: 15px; border-left: 3px solid #28a745; margin: 15px 0; background: #333; border-radius: 3px; }
+        .gates-status { color: #28a745; font-weight: bold; font-size: 1.05em; }
+        
+        footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #444; color: #888; font-size: 0.85em; }
+        
+        code { background: #1e1e1e; padding: 1px 3px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>[EVALUATION REPORT]</h1>
+            <div class="report-meta">
+                <p>Report ID: report_eval_prod_20260323_132857</p>
+                <p>Generated: 2026-03-23 13:31:16</p>
+                <p>Model: LegalChatbot-RAG-v1</p>
+            </div>
+        </header>
+        
+        <div class="section">
+            <div class="section-title">SYSTEM QUALITY</div>
+            <div class="metric-row">
+                <span class="metric-name">Overall Status:</span>
+                <span class="metric-value" style="color: #17a2b8;">GOOD</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-name">Ready for Deployment:</span>
+                <span class="metric-value" style="color: #28a745;">
+                    YES
+                </span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">ANSWER GENERATION QUALITY (Primary)</div>
+            <div class="metric-row">
+                <span class="metric-name">* Accuracy:</span>
+                <span class="metric-value">4.67/5 [EXCELLENT]</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-name">* Completeness:</span>
+                <span class="metric-value">4.20/5 [ACCEPTABLE]</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-name">* Relevance:</span>
+                <span class="metric-value">4.73/5 [EXCELLENT]</span>
+            </div>
+            <div class="metric-row" style="font-weight: bold; margin-top: 10px;">
+                <span class="metric-name">Overall Score:</span>
+                <span class="metric-value">4.55/5</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">RETRIEVAL METRICS (Supporting)</div>
+            <div class="metric-row">
+                <span class="metric-name">* Mean Reciprocal Rank (MRR):</span>
+                <span class="metric-value">0.623 [ACCEPTABLE]</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-name">* Normalized DCG (nDCG):</span>
+                <span class="metric-value">0.623 [ACCEPTABLE]</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-name">* Keyword Coverage:</span>
+                <span class="metric-value">83.3%</span>
+            </div>
+        </div>
+        
+        <div class="gates-section">
+            <div class="section-title" style="margin-top: 0; color: #28a745;">QUALITY GATES</div>
+            <div class="gates-status">PASSED</div>
+            <div style="margin-top: 10px; font-size: 0.9em;">
+                <div>MRR >= 0.62: ✓ (0.623)</div>
+                <div>nDCG >= 0.62: ✓ (0.623)</div>
+                <div>Accuracy >= 4.4: ✓ (4.67)</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Generated by: Legal Chatbot RAG Evaluation Framework v1.0</p>
+            <p>Tests executed: 15</p>
+        </footer>
+    </div>
+</body>
+</html>

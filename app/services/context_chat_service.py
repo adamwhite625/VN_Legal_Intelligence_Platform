@@ -133,7 +133,7 @@ class ContextAwareChatService:
         
         if cached_response:
             # Cache hit! Use cached response
-            print(f"✓ Chat cache HIT for query: {input_data.query[:50]}...")
+            print(f"[HIT] Chat cache HIT for query: {input_data.query[:50]}...")
             # Handle both dict and JSON string from cache
             if isinstance(cached_response, str):
                 cached_data = json.loads(cached_response)
@@ -144,7 +144,7 @@ class ContextAwareChatService:
             response_source = "cache"
         else:
             # Cache miss - call agent
-            print(f"○ Chat cache MISS for query: {input_data.query[:50]}..., calling AI...")
+            print(f"[MISS] Chat cache MISS for query: {input_data.query[:50]}..., calling AI...")
             try:
                 inputs = {
                     "query": prompt,
@@ -167,7 +167,7 @@ class ContextAwareChatService:
                     "sources": formatted_sources
                 }
                 cache_set(cache_key, json.dumps(cache_data), ttl=86400)
-                print(f"✓ Chat response cached (24h TTL)")
+                print(f"[CACHED] Chat response cached (24h TTL)")
 
             except Exception as e:
                 logger.error(f"Agent error: {str(e)}", exc_info=True)
