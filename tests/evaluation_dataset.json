@@ -1,10 +1,160 @@
-[
-  {
-    "question": "Tôi trộm chiếc xe máy trị giá 30 triệu thì bị phạt tù bao nhiêu năm?",
-    "ground_truth": "Theo Khoản 1 Điều 173 Bộ luật Hình sự 2015, người trộm cắp tài sản trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm."
-  },
-  {
-    "question": "Thủ tục ly hôn đơn phương nộp ở đâu?",
-    "ground_truth": "Theo Bộ luật Tố tụng Dân sự 2015, hồ sơ ly hôn đơn phương cần nộp tại Tòa án nhân dân cấp huyện nơi bị đơn (người bị kiện) đang cư trú hoặc làm việc."
+{
+  "test_cases": [
+    {
+      "id": "test_001",
+      "category": "business_establishment",
+      "difficulty": "easy",
+      "priority": "high",
+      "question": "Phạm vi điều chỉnh của Luật Doanh nghiệp 2020 là gì?",
+      "expected_keywords": ["thành lập", "tổ chức", "quản lý", "doanh nghiệp", "công ty trách nhiệm", "hợp danh"],
+      "reference_answer": "Luật Doanh nghiệp 2020 quy định về việc thành lập, tổ chức quản lý, tổ chức lại, giải thể và hoạt động có liên quan của doanh nghiệp, bao gồm công ty trách nhiệm hữu hạn, công ty cổ phần, công ty hợp danh và doanh nghiệp tư nhân; quy định về nhóm công ty."
+    },
+    {
+      "id": "test_002",
+      "category": "business_subjects",
+      "difficulty": "easy",
+      "priority": "high",
+      "question": "Đối tượng áp dụng của Luật Doanh nghiệp 2020 bao gồm những ai?",
+      "expected_keywords": ["doanh nghiệp", "đối tượng", "cá nhân", "tổ chức", "áp dụng"],
+      "reference_answer": "Đối tượng áp dụng Luật Doanh nghiệp gồm: 1. Doanh nghiệp; 2. Cơ quan, tổ chức, cá nhân có liên quan đến việc thành lập, tổ chức quản lý, tổ chức lại, giải thể và hoạt động có liên quan của doanh nghiệp."
+    },
+    {
+      "id": "test_003",
+      "category": "business_rights",
+      "difficulty": "medium",
+      "priority": "high",
+      "question": "Doanh nghiệp có những quyền gì theo Luật Doanh nghiệp 2020?",
+      "expected_keywords": ["quyền", "kinh doanh", "từ chủ", "lựa chọn", "tự chủ", "tìm kiếm thị trường"],
+      "reference_answer": "Quyền của doanh nghiệp bao gồm: 1. Tự do kinh doanh ngành, nghề mà luật không cấm; 2. Tự chủ kinh doanh; 3. Lựa chọn hình thức huy động vốn; 4. Tự do tìm kiếm thị trường; 5. Kinh doanh xuất khẩu, nhập khẩu; 6. Tuyển dụng lao động; 7. Ứng dụng khoa học công nghệ; 8. Chiếm hữu, sử dụng, định đoạt tài sản; 9. Khiếu nại, tham gia tố tụng."
+    },
+    {
+      "id": "test_004",
+      "category": "business_obligations",
+      "difficulty": "medium",
+      "priority": "high",
+      "question": "Doanh nghiệp phải thực hiện những nghĩa vụ gì?",
+      "expected_keywords": ["nghĩa vụ", "điều kiện kinh doanh", "đăng ký", "kế toán", "lao động", "báo cáo"],
+      "reference_answer": "Nghĩa vụ của doanh nghiệp: 1. Đáp ứng đủ điều kiện đầu tư kinh doanh; 2. Thực hiện đầy đủ nghĩa vụ đăng ký doanh nghiệp; 3. Chịu trách nhiệm về tính trung thực, chính xác của thông tin; 4. Tổ chức công tác kế toán, nộp thuế; 5. Bảo đảm quyền, lợi ích người lao động; 6. Tuân theo quy định khác của pháp luật."
+    },
+    {
+      "id": "test_005",
+      "category": "definitions",
+      "difficulty": "hard",
+      "priority": "medium",
+      "question": "Định nghĩa doanh nghiệp theo Luật Doanh nghiệp 2020 như thế nào?",
+      "expected_keywords": ["doanh nghiệp", "tổ chức", "trụ sở", "mục đích kinh doanh", "được thành lập", "đăng ký"],
+      "reference_answer": "Doanh nghiệp là tổ chức có tên riêng, có tài sản, có trụ sở giao dịch, được thành lập hoặc đăng ký thành lập theo quy định của pháp luật nhằm mục đích kinh doanh."
+    },
+    {
+      "id": "test_006",
+      "category": "business_types",
+      "difficulty": "medium",
+      "priority": "high",
+      "question": "Các loại công ty được quy định trong Luật Doanh nghiệp 2020 là gì?",
+      "expected_keywords": ["công ty", "trách nhiệm hữu hạn", "cổ phần", "hợp danh", "doanh nghiệp tư nhân"],
+      "reference_answer": "Các loại doanh nghiệp gồm: 1. Công ty trách nhiệm hữu hạn (một thành viên và hai thành viên trở lên); 2. Công ty cổ phần; 3. Công ty hợp danh; 4. Doanh nghiệp tư nhân."
+    },
+    {
+      "id": "test_007",
+      "category": "legal_representative",
+      "difficulty": "hard",
+      "priority": "medium",
+      "question": "Người đại diện theo pháp luật của doanh nghiệp có những trách nhiệm gì?",
+      "expected_keywords": ["người đại diện", "pháp luật", "trách nhiệm", "lợi ích", "trung thành", "lạm dụng"],
+      "reference_answer": "Người đại diện theo pháp luật của doanh nghiệp có trách nhiệm: 1. Thực hiện quyền và nghĩa vụ được giao một cách trung thực, cẩn trọng, tốt nhất; 2. Trung thành với lợi ích của doanh nghiệp; 3. Không lạm dụng địa vị, chức vụ; 4. Không sử dụng thông tin, bí quyết, cơ hội kinh doanh để tư lợi; 5. Thông báo kịp thời về doanh nghiệp có liên quan."
+    },
+    {
+      "id": "test_008",
+      "category": "capital_contribution",
+      "difficulty": "medium",
+      "priority": "medium",
+      "question": "Góp vốn vào doanh nghiệp là gì?",
+      "expected_keywords": ["góp vốn", "tài sản", "vốn điều lệ", "thành lập", "thêm vốn"],
+      "reference_answer": "Góp vốn là việc góp tài sản để tạo thành vốn điều lệ của công ty, bao gồm góp vốn để thành lập công ty hoặc góp thêm vốn điều lệ của công ty đã được thành lập."
+    },
+    {
+      "id": "test_009",
+      "category": "social_enterprise",
+      "difficulty": "hard",
+      "priority": "medium",
+      "question": "Tiêu chí để một doanh nghiệp được xem là doanh nghiệp xã hội là gì?",
+      "expected_keywords": ["doanh nghiệp xã hội", "tiêu chí", "vấn đề xã hội", "môi trường", "lợi nhuận", "tái đầu tư"],
+      "reference_answer": "Doanh nghiệp xã hội phải đáp ứng các tiêu chí: 1. Là doanh nghiệp được đăng ký thành lập theo quy định của Luật; 2. Mục tiêu hoạt động nhằm giải quyết vấn đề xã hội, môi trường vì lợi ích cộng đồng; 3. Sử dụng ít nhất 51% tổng lợi nhuận sau thuế hằng năm để tái đầu tư nhằm thực hiện mục tiêu đã đăng ký."
+    },
+    {
+      "id": "test_010",
+      "category": "document_preservation",
+      "difficulty": "easy",
+      "priority": "low",
+      "question": "Doanh nghiệp phải lưu giữ những tài liệu nào?",
+      "expected_keywords": ["tài liệu", "lưu giữ", "điều lệ", "kế toán", "giấy phép", "báo cáo"],
+      "reference_answer": "Doanh nghiệp phải lưu giữ các tài liệu như: 1. Điều lệ công ty; 2. Sổ đăng ký thành viên hoặc cổ đông; 3. Giấy phép và giấy chứng nhận; 4. Tài liệu xác nhận quyền sở hữu tài sản; 5. Biên bản họp; 6. Báo cáo của Ban kiểm soát; 7. Sổ kế toán, báo cáo tài chính."
+    },
+    {
+      "id": "test_011",
+      "category": "prohibited_acts",
+      "difficulty": "hard",
+      "priority": "high",
+      "question": "Những hành vi nào bị nghiêm cấm theo Luật Doanh nghiệp?",
+      "expected_keywords": ["hành vi", "cấm", "lừa đảo", "rửa tiền", "kê khai", "chưa đủ điều kiện"],
+      "reference_answer": "Những hành vi bị nghiêm cấm bao gồm: 1. Cấp hoặc từ chối cấp Giấy chứng nhận trái quy định; 2. Ngăn cản chủ sở hữu, thành viên, cổ đông thực hiện quyền; 3. Kinh doanh khi chưa đăng ký hoặc đã bị thu hồi giấy chứng nhận; 4. Kê khai không trung thực; 5. Kê khai khống vốn; 6. Kinh doanh ngành cấm; 7. Lừa đảo, rửa tiền, tài trợ khủng bố."
+    },
+    {
+      "id": "test_012",
+      "category": "state_protection",
+      "difficulty": "medium",
+      "priority": "medium",
+      "question": "Nhà nước bảo đảm gì cho doanh nghiệp?",
+      "expected_keywords": ["nhà nước", "bảo đảm", "sở hữu", "bình đẳng", "pháp luật", "tồn tại", "phát triển"],
+      "reference_answer": "Nhà nước bảo đảm: 1. Sự tồn tại lâu dài và phát triển của các loại hình doanh nghiệp; 2. Bình đẳng trước pháp luật của các doanh nghiệp; 3. Công nhận tính sinh lợi hợp pháp của hoạt động kinh doanh; 4. Công nhận và bảo hộ quyền sở hữu tài sản, vốn đầu tư, thu nhập, quyền và lợi ích hợp pháp khác."
+    },
+    {
+      "id": "test_013",
+      "category": "definitions",
+      "difficulty": "easy",
+      "priority": "medium",
+      "question": "Vốn điều lệ là gì?",
+      "expected_keywords": ["vốn điều lệ", "tài sản", "thành viên", "cổ phần", "mệnh giá"],
+      "reference_answer": "Vốn điều lệ là tổng giá trị tài sản do các thành viên công ty, chủ sở hữu công ty đã góp hoặc cam kết góp khi thành lập công ty trách nhiệm hữu hạn, công ty hợp danh; là tổng mệnh giá cổ phần đã bán hoặc được đăng ký mua khi thành lập công ty cổ phần."
+    },
+    {
+      "id": "test_014",
+      "category": "business_types",
+      "difficulty": "medium",
+      "priority": "medium",
+      "question": "Doanh nghiệp Việt Nam được định nghĩa như thế nào?",
+      "expected_keywords": ["doanh nghiệp Việt Nam", "được thành lập", "pháp luật Việt Nam", "trụ sở chính", "Việt Nam"],
+      "reference_answer": "Doanh nghiệp Việt Nam là doanh nghiệp được thành lập hoặc đăng ký thành lập theo quy định của pháp luật Việt Nam và có trụ sở chính tại Việt Nam."
+    },
+    {
+      "id": "test_015",
+      "category": "legal_representative",
+      "difficulty": "hard",
+      "priority": "medium",
+      "question": "Người đại diện theo ủy quyền của chủ sở hữu, thành viên, cổ đông công ty là tổ chức phải có những điều kiện gì?",
+      "expected_keywords": ["người đại diện", "ủy quyền", "tiêu chuẩn", "điều kiện", "tổ chức", "cá nhân"],
+      "reference_answer": "Người đại diện theo ủy quyền phải có các tiêu chuẩn và điều kiện: 1. Không thuộc đối tượng bị cấm quy định tại Luật; 2. Nếu thành viên, cổ đông là doanh nghiệp nhà nước không được cử người có quan hệ gia đình của người quản lý công ty; 3. Tiêu chuẩn và điều kiện khác do Điều lệ công ty quy định."
+    }
+  ],
+  "metadata": {
+    "created_at": "2024-03-21T00:00:00Z",
+    "updated_at": "2024-03-21T00:00:00Z",
+    "total_tests": 15,
+    "categories": [
+      "business_establishment",
+      "business_subjects",
+      "business_rights",
+      "business_obligations",
+      "business_types",
+      "legal_representative",
+      "definitions",
+      "capital_contribution",
+      "social_enterprise",
+      "document_preservation",
+      "prohibited_acts",
+      "state_protection"
+    ],
+    "source": "Luật Doanh nghiệp 2020",
+    "description": "Test dataset based on Vietnamese Enterprise Law 2020 loaded into Qdrant vector store"
   }
-]
+}

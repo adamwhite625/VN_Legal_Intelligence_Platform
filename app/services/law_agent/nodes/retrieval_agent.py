@@ -56,7 +56,7 @@ def retriever_node(state: LawAgentState) -> LawAgentState:
         # Embed query
         print("   📝 Embedding query...")
         query_vector = embeddings.embed_query(query)
-        print(f"   ✓ Vector dimension: {len(query_vector)}")
+        print(f"   [OK] Vector dimension: {len(query_vector)}")
 
         # Search in Qdrant
         print(f"   🔎 Searching in Qdrant (collection: {settings.COLLECTION_NAME})...")
