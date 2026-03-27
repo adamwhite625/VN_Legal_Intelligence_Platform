@@ -23,6 +23,18 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ---
 
+## System Architecture
+
+### Overall Architecture
+
+![Architecture Diagram](images/architecture.png)
+
+### RAG Agent Flow
+
+![RAG Pipeline](images/agentic_rag_flow.png)
+
+---
+
 ## Table of Contents
 
 1.  [Features](https://www.google.com/search?q=%231-features)
