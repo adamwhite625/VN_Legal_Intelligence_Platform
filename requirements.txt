@@ -15,15 +15,21 @@ redis==5.0.1
 qdrant-client==1.7.0
 
 # LLM & AI
-langchain==0.1.5
-langchain-community==0.0.10
-langchain-openai==0.0.6
-openai==1.3.8
+langchain
+langchain-community
+langchain-openai
+langchain-huggingface
+langchain-text-splitters
+sentence-transformers
+openai
+langgraph
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-pydantic==2.5.0
+bcrypt==3.2.2
+pydantic[email]==2.5.0
+email-validator
 pydantic-settings==2.1.0
 
 # Environment & Config
