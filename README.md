@@ -35,6 +35,12 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ---
 
+### Platform Interface
+
+![Platform Interface](images/legal1.png)
+
+---
+
 ## Table of Contents
 
 1.  [Features](https://www.google.com/search?q=%231-features)
