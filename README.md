@@ -43,17 +43,17 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ## Table of Contents
 
-1.  [Features](https://www.google.com/search?q=%231-features)
-2.  [Architecture](https://www.google.com/search?q=%232-architecture)
-3.  [Project Structure](https://www.google.com/search?q=%233-project-structure)
-4.  [Prerequisites](https://www.google.com/search?q=%234-prerequisites)
-5.  [Installation and Setup](https://www.google.com/search?q=%235-installation-and-setup)
-6.  [API Overview](https://www.google.com/search?q=%236-api-overview)
-7.  [Evaluation Framework](https://www.google.com/search?q=%237-evaluation-framework)
+1.  [Features](#1-features)
+2.  [Architecture](#2-architecture)
+3.  [Project Structure](#3-project-structure)
+4.  [Prerequisites](#4-prerequisites)
+5.  [Installation and Setup](#5-installation-and-setup)
+6.  [API Overview](#6-api-overview)
+7.  [Evaluation Framework](#7-evaluation-framework)
 
 ---
 
-## 1\. Features
+## 1. Features
 
 - Semantic Search: Multi-lingual law document retrieval using Qdrant vector database.
 - Agentic RAG: 7-node LangGraph pipeline for reasoning and information verification.
@@ -64,7 +64,7 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ---
 
-## 2\. Architecture
+## 2. Architecture
 
 ### Backend (FastAPI & LangGraph)
 
@@ -86,7 +86,7 @@ The RAG pipeline operates through 7 specialized logic nodes:
 
 ---
 
-## 3\. Project Structure
+## 3. Project Structure
 
 ```text
 VN_Legal_Intelligence_Platform/
@@ -106,7 +106,7 @@ VN_Legal_Intelligence_Platform/
 
 ---
 
-## 4\. Prerequisites
+## 4. Prerequisites
 
 - Python 3.11+
 - Anaconda or Miniconda (recommended)
@@ -115,7 +115,7 @@ VN_Legal_Intelligence_Platform/
 
 ---
 
-## 5\. Installation and Setup
+## 5. Installation and Setup
 
 ### Step 1: Environment Setup
 
@@ -172,7 +172,7 @@ Verify the installation at `http://localhost:8000/docs`.
 
 ---
 
-## 6\. API Overview
+## 6. API Overview
 
 All requests are prefixed with `/api/v1`.
 
@@ -186,7 +186,7 @@ All requests are prefixed with `/api/v1`.
 
 ---
 
-## 7\. Evaluation Framework
+## 7. Evaluation Framework
 
 The system includes a robust evaluation suite to ensure legal advice remains accurate and grounded.
 
