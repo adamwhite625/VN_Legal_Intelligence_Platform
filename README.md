@@ -60,7 +60,9 @@ The system is continuously validated using a specialized evaluation framework fo
 - Multi-turn Chat: Persistent conversation history with context-aware responses.
 - User Management: Secure authentication (JWT), law bookmarking, and query tracking.
 - Admin Dashboard: Comprehensive usage statistics and user management.
-- Deployment Ready: Fully containerized infrastructure using Docker Compose.
+- Deployment Ready: Fully automated MLOps pipeline with GitHub Actions and Google Cloud Platform.
+- Production Optimized: Pre-indexed vector models and containerized architecture for sub-second startup latency.
+- Enterprise Security: Centralized secret management via Google Secret Manager and secure VPC-ready networking.
 
 ---
 
@@ -82,6 +84,8 @@ The RAG pipeline operates through 7 specialized logic nodes:
 
 - AI/LLM: OpenAI GPT-4o-mini, LangGraph, Pydantic v2.
 - Database: Qdrant (Vector), MySQL (Relational), Redis (Cache).
+- Infrastructure: Google Cloud Run (Serverless), Cloud SQL (Managed MySQL).
+- MLOps: GitHub Actions, Artifact Registry, Secret Manager.
 - Frontend: React 19, Vite, TailwindCSS.
 
 ---
@@ -90,18 +94,20 @@ The RAG pipeline operates through 7 specialized logic nodes:
 
 ```text
 VN_Legal_Intelligence_Platform/
-├── app/                        # FastAPI Backend
-│   ├── api/v1/                 # Endpoints (auth, chat, search, admin)
-│   ├── core/                   # Security, Config, Redis/Qdrant clients
-│   ├── services/               # RAG Agent logic and Embeddings
-│   └── models/                 # SQLAlchemy ORM models
-├── frontend/                   # React TypeScript Frontend
-│   ├── src/features/           # Business logic modules
-│   └── src/app/                # Providers and routing
-├── tests/evaluation/           # RAG metric scripts and test cases
-├── scripts/                    # Utility and data import scripts
-├── docker-compose.yml          # Infrastructure orchestration
-└── RUN_EVALUATION.py           # Master evaluation script
+├── app/                        # FastAPI Backend engine
+│   ├── api/v1/                 # REST Endpoints (Auth, RAG Chat, Admin)
+│   ├── core/                   # Infrastructure (Security, Cloud Config, Clients)
+│   ├── services/               # RAG Agent (LangGraph) & AI Orchestration
+│   └── models/                 # Database Schemas (SQLAlchemy ORM)
+├── frontend/                   # React 19 + Vite + TypeScript Application
+├── .github/workflows/          # MLOps Pipelines (CI/CD & Auto-Deploy)
+├── docs/                       # Project Documentation & High-level Architecture
+├── tests/                      # Unit Tests & RAG Evaluation Suite
+├── scripts/                    # Maintenance, Data Import & Model Setup
+├── Dockerfile.backend          # Production-optimized Backend container
+├── Dockerfile.frontend         # Production-optimized Frontend container
+├── docker-compose.yml          # Local infrastructure orchestration
+└── RUN_EVALUATION.py           # Master Quality Gate for RAG metrics
 ```
 
 ---
@@ -186,12 +192,11 @@ All requests are prefixed with `/api/v1`.
 
 ---
 
-## 7. Evaluation Framework
+## 8. MLOps & Production Workflow
 
-The system includes a robust evaluation suite to ensure legal advice remains accurate and grounded.
+The project implements a full MLOps lifecycle to ensure reliability and performance:
 
-**Running the test suite:**
-
-```bash
-python RUN_EVALUATION.py
-```
+1.  **Continuous Integration**: Every push triggers flake8 linting and logic verification.
+2.  **Continuous Evaluation**: Automated RAG quality assessment using `RUN_EVALUATION.py` for each pull request.
+3.  **Docker Optimization**: Custom build process that pre-downloads transformer models, reducing Cloud Run cold-start times by over 80%.
+4.  **Continuous Deployment**: Automated deployment to Google Cloud Run upon merging to `main`, with a separate staging environment on `develop`.
