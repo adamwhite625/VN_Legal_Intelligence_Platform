@@ -24,7 +24,7 @@ langchain-huggingface==0.0.3
 langchain-text-splitters==0.2.4
 langgraph==0.4.0
 sentence-transformers==3.0.1
-openai==1.40.0
+openai==1.45.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
@@ -42,6 +42,7 @@ slowapi==0.1.9
 # Utilities
 requests==2.31.0
 aiohttp==3.9.1
+httpx==0.27.2
 
 # CI/CD
 pytest==7.4.3
