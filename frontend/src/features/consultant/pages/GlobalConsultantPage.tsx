@@ -6,12 +6,7 @@ import { useConsultantStore } from "../model/consultantStore";
 
 export default function GlobalConsultantPage() {
   const { loadSessionHistory } = useConsultantStore();
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
-    null,
-  );
-
   const handleSelectSession = async (sessionId: number) => {
-    setSelectedSessionId(sessionId);
     await loadSessionHistory(sessionId);
   };
 

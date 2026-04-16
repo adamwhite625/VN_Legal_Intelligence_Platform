@@ -14,23 +14,24 @@ redis==5.0.1
 # Vector DB
 qdrant-client==1.7.0
 
-# LLM & AI
-langchain
-langchain-community
-langchain-openai
-langchain-huggingface
-langchain-text-splitters
-sentence-transformers
-openai
-langgraph
+# LLM & AI - LOCKED VERSIONS (Lưu ý: Luôn dùng +cpu cho Torch trên Cloud Run)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.1+cpu
+langchain==0.2.17
+langchain-community==0.2.19
+langchain-openai==0.1.25
+langchain-huggingface==0.0.3
+langchain-text-splitters==0.2.4
+langgraph==0.4.0
+sentence-transformers==3.0.1
+openai==1.40.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-bcrypt==3.2.2
-pydantic[email]==2.5.0
-email-validator
-pydantic-settings==2.1.0
+pydantic==2.8.2
+pydantic-settings==2.4.0
+email-validator==2.1.0
 
 # Environment & Config
 python-dotenv==1.0.0
@@ -42,7 +43,7 @@ slowapi==0.1.9
 requests==2.31.0
 aiohttp==3.9.1
 
-# Development/CI
+# CI/CD
 pytest==7.4.3
-black==23.12.0
 flake8==6.1.0
+black==23.12.0
