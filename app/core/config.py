@@ -91,7 +91,16 @@ class Settings(BaseSettings):
     def SQLALCHEMY_DATABASE_URL(self) -> str:
         """
         Build database connection URL for SQLAlchemy.
+        Supports both TCP (local) and Unix Socket (Cloud Run).
         """
+        # Nếu DB_HOST bắt đầu bằng '/', giả định đây là đường dẫn Unix Socket (Cloud SQL)
+        if self.DB_HOST.startswith("/"):
+            return (
+                f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@/"
+                f"{self.DB_NAME}?unix_socket={self.DB_HOST}"
+            )
+        
+        # Ngược lại dùng kết nối TCP truyền thống
         return (
             f"mysql+pymysql://{self.DB_USER}:"
             f"{self.DB_PASSWORD}@"

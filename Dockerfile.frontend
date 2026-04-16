@@ -1,0 +1,35 @@
+# --- Stage 1: Build Stage ---
+FROM node:20-alpine AS build
+
+# Thiết lập thư mục làm việc
+WORKDIR /app
+
+# Copy package.json và cài đặt dependencies
+COPY frontend/package*.json ./
+RUN npm install
+
+# Copy mã nguồn frontend và build
+COPY frontend/ .
+RUN npm run build
+
+# --- Stage 2: Production Stage ---
+FROM nginx:stable-alpine
+
+# Copy file build từ Stage 1 sang thư mục mặc định của Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy cấu hình Nginx tùy chỉnh (tùy chọn, nếu cần xử lý SPA routing)
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html index.htm; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Chạy Nginx
+CMD ["nginx", "-g", "daemon off;"]

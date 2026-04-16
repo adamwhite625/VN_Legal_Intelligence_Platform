@@ -6,3 +6,4 @@ venv/
 mysql_data/
 qdrant_data/
 *.log
+docs/
