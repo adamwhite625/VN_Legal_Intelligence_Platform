@@ -21,7 +21,16 @@ async def lifespan(app: FastAPI):
     Initialize and cleanup shared resources.
     """
     # Startup
-    init_clients()
+    print("--- APPLICATION STARTING UP ---")
+    print(f"COLLECTION_NAME: {settings.COLLECTION_NAME}")
+    print(f"DB_HOST: {settings.DB_HOST}")
+    
+    try:
+        init_clients()
+        print("--- ALL CLIENTS INITIALIZED SUCCESSFULLY ---")
+    except Exception as e:
+        print(f"--- ERROR DURING STARTUP: {str(e)} ---")
+        raise e
 
     yield
 
