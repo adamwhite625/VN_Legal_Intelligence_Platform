@@ -10,8 +10,8 @@ The system is continuously validated using a specialized evaluation framework fo
 
 **Status: PASS (Production Ready)**
 
-| Metric                         | Score / Value |
-| ------------------------------ | ------------- |
+| Metric                               | Score / Value |
+| ------------------------------------ | ------------- |
 | **Answer Accuracy**            | 4.67 / 5.0    |
 | **Answer Completeness**        | 4.20 / 5.0    |
 | **Answer Relevance**           | 4.73 / 5.0    |
@@ -27,7 +27,7 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ### Overall Architecture
 
-![Architecture Diagram](images/architecture.png)
+![Architecture Diagram](images/architecture2.png)
 
 ### RAG Agent Flow
 
@@ -43,13 +43,13 @@ The system is continuously validated using a specialized evaluation framework fo
 
 ## Table of Contents
 
-1.  [Features](#1-features)
-2.  [Architecture](#2-architecture)
-3.  [Project Structure](#3-project-structure)
-4.  [Prerequisites](#4-prerequisites)
-5.  [Installation and Setup](#5-installation-and-setup)
-6.  [API Overview](#6-api-overview)
-7.  [Evaluation Framework](#7-evaluation-framework)
+1. [Features](#1-features)
+2. [Architecture](#2-architecture)
+3. [Project Structure](#3-project-structure)
+4. [Prerequisites](#4-prerequisites)
+5. [Installation and Setup](#5-installation-and-setup)
+6. [API Overview](#6-api-overview)
+7. [Evaluation Framework](#7-evaluation-framework)
 
 ---
 
@@ -72,13 +72,13 @@ The system is continuously validated using a specialized evaluation framework fo
 
 The RAG pipeline operates through 7 specialized logic nodes:
 
-1.  Contextualize: Rewrites queries based on chat history.
-2.  Router: Classifies intent and optimizes retrieval strategy.
-3.  Retriever: Performs semantic search in Qdrant.
-4.  Checker: Validates if retrieved laws are sufficient to answer.
-5.  Writer: Generates the final legal response with citations.
-6.  Clarifier: Asks for more details if the user query is ambiguous.
-7.  Fallback: Handles error states or "no law found" scenarios.
+1. Contextualize: Rewrites queries based on chat history.
+2. Router: Classifies intent and optimizes retrieval strategy.
+3. Retriever: Performs semantic search in Qdrant.
+4. Checker: Validates if retrieved laws are sufficient to answer.
+5. Writer: Generates the final legal response with citations.
+6. Clarifier: Asks for more details if the user query is ambiguous.
+7. Fallback: Handles error states or "no law found" scenarios.
 
 ### Tech Stack
 
@@ -182,8 +182,8 @@ Verify the installation at `http://localhost:8000/docs`.
 
 All requests are prefixed with `/api/v1`.
 
-| Category     | Endpoint         | Action                                   |
-| ------------ | ---------------- | ---------------------------------------- |
+| Category           | Endpoint           | Action                                   |
+| ------------------ | ------------------ | ---------------------------------------- |
 | **Auth**     | `/auth/login`    | Authenticate user and receive JWT        |
 | **Chat**     | `/chat/send`     | Submit query to the Agentic RAG pipeline |
 | **Search**   | `/search/search` | Search laws via semantic vector matching |
@@ -196,7 +196,7 @@ All requests are prefixed with `/api/v1`.
 
 The project implements a full MLOps lifecycle to ensure reliability and performance:
 
-1.  **Continuous Integration**: Every push triggers flake8 linting and logic verification.
-2.  **Continuous Evaluation**: Automated RAG quality assessment using `RUN_EVALUATION.py` for each pull request.
-3.  **Docker Optimization**: Custom build process that pre-downloads transformer models, reducing Cloud Run cold-start times by over 80%.
-4.  **Continuous Deployment**: Automated deployment to Google Cloud Run upon merging to `main`, with a separate staging environment on `develop`.
+1. **Continuous Integration**: Every push triggers flake8 linting and logic verification.
+2. **Continuous Evaluation**: Automated RAG quality assessment using `RUN_EVALUATION.py` for each pull request.
+3. **Docker Optimization**: Custom build process that pre-downloads transformer models, reducing Cloud Run cold-start times by over 80%.
+4. **Continuous Deployment**: Automated deployment to Google Cloud Run upon merging to `main`, with a separate staging environment on `develop`.
