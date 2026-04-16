@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # Vector DB (legacy naming)
     # -------------------------
     DB_SERVER: str | None = None
-    COLLECTION_NAME: str = "legal_documents"
+    COLLECTION_NAME: str = "law_data"
 
     # -------------------------
     # Optional LLM providers (not used yet)

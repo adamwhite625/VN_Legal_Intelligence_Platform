@@ -21,6 +21,10 @@ COPY . .
 # Thiết lập các biến môi trường mặc định
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
+ENV HF_HOME=/app/model_cache
+
+# Chạy script tải model vào cache (giúp startup nhanh hơn trên Cloud Run)
+RUN python scripts/download_models.py
 
 # Expose port 8080 (Cloud Run yêu cầu)
 EXPOSE 8080
