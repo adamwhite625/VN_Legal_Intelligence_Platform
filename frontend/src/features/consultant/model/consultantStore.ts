@@ -6,7 +6,6 @@ import {
   getSessions,
   deleteSession,
   type ChatResponse,
-  type ChatSession,
 } from "../api/consultantApi";
 
 interface Message {
