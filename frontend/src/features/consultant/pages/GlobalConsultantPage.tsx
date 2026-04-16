@@ -1,4 +1,3 @@
-import { useState } from "react";
 import MainLayout from "@/shared/layout/MainLayout";
 import ConsultantPanel from "../components/ConsultantPanel";
 import SessionHistoryPanel from "../components/SessionHistoryPanel";
