@@ -1,0 +1,29 @@
+# Sử dụng Python 3.11 slim làm base image
+FROM python:3.11-slim
+
+# Thiết lập thư mục làm việc
+WORKDIR /app
+
+# Cài đặt các thư viện hệ thống cần thiết
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy file requirements và cài đặt dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy toàn bộ mã nguồn backend
+COPY . .
+
+# Thiết lập các biến môi trường mặc định
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
+
+# Expose port 8080 (Cloud Run yêu cầu)
+EXPOSE 8080
+
+# Lệnh khởi chạy ứng dụng
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]

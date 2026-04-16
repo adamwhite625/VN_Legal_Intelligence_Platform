@@ -21,7 +21,9 @@ QDRANT_HOST = os.getenv("QDRANT_HOST", "localhost")
 QDRANT_PORT = int(os.getenv("QDRANT_PORT", 6333))
 COLLECTION_NAME = os.getenv("COLLECTION_NAME", "law_data")
 
-DATA_FILE = "../data/raw_law_data.json"
+# Lấy đường dẫn tuyệt đối tới file dữ liệu (tránh lỗi file not found khi chạy từ thư mục gốc)
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(CURRENT_DIR, "..", "data", "raw_law_data.json")
 
 # =============================
 # INIT CLIENTS
