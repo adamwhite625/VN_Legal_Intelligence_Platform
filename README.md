@@ -121,7 +121,7 @@ VN_Legal_Intelligence_Platform/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/VN_Legal_Intelligence_Platform.git
+git clone https://github.com/adamwhite625/VN_Legal_Intelligence_Platform.git
 cd VN_Legal_Intelligence_Platform
 
 # Create and activate environment

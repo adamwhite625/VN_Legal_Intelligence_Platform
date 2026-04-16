@@ -14,22 +14,23 @@ redis==5.0.1
 # Vector DB
 qdrant-client==1.7.0
 
-# LLM & AI (Modern LangChain Ecosystem)
-langchain>=0.2.0
-langchain-community>=0.2.0
-langchain-openai>=0.1.0
-langchain-huggingface>=0.1.0
-langchain-text-splitters>=0.2.0
-langgraph>=0.1.0
-sentence-transformers>=3.0.0
-openai>=1.20.0
-torch --index-url https://download.pytorch.org/whl/cpu
+# LLM & AI
+langchain
+langchain-community
+langchain-openai
+langchain-huggingface
+langchain-text-splitters
+sentence-transformers
+openai
+langgraph
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-pydantic>=2.7.0
-pydantic-settings>=2.2.0
+bcrypt==3.2.2
+pydantic[email]==2.5.0
+email-validator
+pydantic-settings==2.1.0
 
 # Environment & Config
 python-dotenv==1.0.0
