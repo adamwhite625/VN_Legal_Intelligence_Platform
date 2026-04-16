@@ -88,6 +88,8 @@ jobs:
             --region $REGION \
             --platform managed \
             --allow-unauthenticated \
+            --memory 2Gi \
+            --cpu 1 \
             --update-secrets="DB_HOST=DB_HOST:latest,DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,QDRANT_HOST=QDRANT_HOST:latest,QDRANT_PORT=QDRANT_PORT:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,SECRET_KEY=SECRET_KEY:latest,COLLECTION_NAME=COLLECTION_NAME:latest"
 
       - name: Deploy Frontend to Cloud Run
