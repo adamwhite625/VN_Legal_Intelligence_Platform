@@ -1,0 +1,376 @@
+{
+  "results": [
+    {
+      "question_id": "Q01",
+      "category": "penal",
+      "question": "Tội giết người bị xử phạt như thế nào theo Bộ luật Hình sự?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 9.4789,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.5549,
+        "retriever": 0.2609,
+        "checker": 1.4649,
+        "answer": 6.1896
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.223,
+        "qdrant_search": 0.0379,
+        "filtering": 0.0
+      },
+      "full_answer": "Tội giết người bị xử phạt theo các quy định của Bộ luật Hình sự như sau:\n\n1. **Tội giết người thông thường**: \n   - Theo Điều 123 (Tội giết người), người nào giết người thuộc một trong các trường hợp quy định sẽ bị phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình.\n\n2. **Tội giết người do vượt quá giới hạn phòng vệ chính đáng**:\n   - Theo Điều 126 (Tội giết người do vượt quá giới hạn phòng vệ chính đáng hoặc do vượt quá mức cần thiết khi bắt giữ người phạm tội), người nào giết người trong trường hợp này sẽ bị phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 02 năm. Nếu phạm tội đối với 02 người trở lên, mức phạt sẽ tăng lên từ 02 năm đến 05 năm.\n\n3. **Hình phạt tử hình**:\n   - Theo Điều 40 (Tử hình), hình phạt tử hình chỉ áp dụng đối với người phạm tội đặc biệt nghiêm trọng thuộc các nhóm tội xâm phạm an ninh quốc gia, xâm phạm tính mạng con người, và một số tội phạm đặc biệt nghiêm trọng khác.\n\n4. **Căn cứ quyết định hình phạt**:\n   - Theo Điều 50 (Căn cứ quyết định hình phạt), Tòa án sẽ căn cứ vào tính chất và mức độ nguy hiểm cho xã hội của hành vi phạm tội, nhân thân người phạm tội, cũng như các tình tiết giảm nhẹ và tăng nặng trách nhiệm hình sự để quyết định hình phạt.\n\nTóm lại, hình phạt cho tội giết người có thể rất nghiêm khắc, tùy thuộc vào tính chất và hoàn cảnh của từng vụ án cụ thể.",
+      "num_docs_retrieved": 10
+    },
+    {
+      "question_id": "Q02",
+      "category": "civil",
+      "question": "Quyền thừa kế theo pháp luật được quy định ra sao?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 12.8059,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.157,
+        "retriever": 0.0476,
+        "checker": 1.818,
+        "answer": 9.7773
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0291,
+        "qdrant_search": 0.0184,
+        "filtering": 0.0001
+      },
+      "full_answer": "Quyền thừa kế theo pháp luật được quy định như sau:\n\n1. **Khái niệm thừa kế theo pháp luật**: Thừa kế theo pháp luật là việc thừa kế được thực hiện theo hàng thừa kế, điều kiện và trình tự do pháp luật quy định. Điều này có nghĩa là khi không có di chúc, tài sản sẽ được phân chia theo quy định của pháp luật. (Theo Điều 649 Bộ luật Dân sự 2015).\n\n2. **Quyền lập di chúc**: Cá nhân có quyền lập di chúc để định đoạt tài sản của mình, và nếu không có di chúc, tài sản sẽ được để lại cho người thừa kế theo pháp luật. (Theo Điều 609 Bộ luật Dân sự 2015).\n\n3. **Xác lập quyền sở hữu**: Người thừa kế sẽ được xác lập quyền sở hữu đối với tài sản thừa kế theo quy định của pháp luật. (Theo Điều 234 Bộ luật Dân sự 2015).\n\n4. **Thời điểm phát sinh quyền và nghĩa vụ**: Quyền và nghĩa vụ của người thừa kế phát sinh kể từ thời điểm mở thừa kế, tức là thời điểm người để lại di sản qua đời. (Theo Điều 614 Bộ luật Dân sự 2015).\n\n5. **Quy định về thừa kế quốc tế**: Thừa kế được xác định theo pháp luật của nước mà người để lại di sản có quốc tịch ngay trước khi chết, và việc thực hiện quyền thừa kế đối với bất động sản được xác định theo pháp luật của nước nơi có bất động sản đó. (Theo Điều 680 Bộ luật Dân sự 2015). \n\nTóm lại, quyền thừa kế theo pháp luật được quy định rõ ràng về khái niệm, quyền lập di chúc, xác lập quyền sở hữu, thời điểm phát sinh quyền và nghĩa vụ, cũng như các quy định liên quan đến thừa kế quốc tế.",
+      "num_docs_retrieved": 5
+    },
+    {
+      "question_id": "Q03",
+      "category": "business",
+      "question": "Phạm vi điều chỉnh của Luật Doanh nghiệp 2020 là gì?",
+      "terminal_node": "fallback",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "fallback"
+      ],
+      "e2e_latency_s": 0.9779,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.9297,
+        "retriever": 0.0422,
+        "checker": 0.0002,
+        "fallback": 0.0003
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0251,
+        "qdrant_search": 0.0171,
+        "filtering": 0.0
+      },
+      "full_answer": "Xin lỗi, hiện tại cơ sở dữ liệu của tôi chưa có văn bản pháp lý chính xác về vấn đề này. Để đảm bảo an toàn pháp lý, tôi xin phép không tự suy đoán. Bạn vui lòng tham vấn luật sư trực tiếp.",
+      "num_docs_retrieved": 0
+    },
+    {
+      "question_id": "Q04",
+      "category": "marriage",
+      "question": "Điều kiện kết hôn theo Luật Hôn nhân và Gia đình là gì?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 6.821,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.993,
+        "retriever": 0.0509,
+        "checker": 2.8216,
+        "answer": 2.9492
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0246,
+        "qdrant_search": 0.0263,
+        "filtering": 0.0
+      },
+      "full_answer": "Theo Điều 3 của Luật Hôn nhân và Gia đình 2014, kết hôn là việc nam và nữ xác lập quan hệ vợ chồng với nhau theo quy định của Luật này về điều kiện kết hôn và đăng ký kết hôn. Cụ thể, điều kiện kết hôn được quy định tại Điều 8 của Luật này, bao gồm các yêu cầu về độ tuổi, tình trạng hôn nhân và các điều kiện khác mà pháp luật quy định. \n\nDo đó, để kết hôn hợp pháp, các bên phải đáp ứng đầy đủ các điều kiện theo quy định tại Điều 8 của Luật Hôn nhân và Gia đình 2014.",
+      "num_docs_retrieved": 4
+    },
+    {
+      "question_id": "Q05",
+      "category": "procedure",
+      "question": "Thủ tục đăng ký thành lập doanh nghiệp gồm những bước nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 6.8533,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.8495,
+        "retriever": 0.0424,
+        "checker": 0.0003,
+        "answer": 5.9553
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.027,
+        "qdrant_search": 0.0153,
+        "filtering": 0.0
+      },
+      "full_answer": "Thủ tục đăng ký thành lập doanh nghiệp gồm các bước sau:\n\n1. **Người thành lập doanh nghiệp hoặc người được ủy quyền thực hiện đăng ký doanh nghiệp**: Theo Điều 26 Luật Doanh nghiệp 2020, người thành lập doanh nghiệp có thể thực hiện đăng ký theo một trong ba phương thức: \n   - Đăng ký trực tiếp tại Cơ quan đăng ký kinh doanh.\n   - Đăng ký qua dịch vụ bưu chính.\n   - Đăng ký qua mạng thông tin điện tử.\n\n2. **Nộp hồ sơ đăng ký doanh nghiệp**: Nếu chọn phương thức đăng ký qua mạng thông tin điện tử, người thành lập doanh nghiệp cần nộp hồ sơ qua Cổng thông tin quốc gia về đăng ký doanh nghiệp. Hồ sơ này phải bao gồm các dữ liệu theo quy định của Luật và được thể hiện dưới dạng văn bản điện tử.\n\n3. **Xem xét tính hợp lệ của hồ sơ**: Theo Điều 26, trong thời hạn 03 ngày làm việc kể từ ngày nhận hồ sơ, Cơ quan đăng ký kinh doanh có trách nhiệm xem xét tính hợp lệ của hồ sơ đăng ký doanh nghiệp.\n\n4. **Cấp Giấy chứng nhận đăng ký doanh nghiệp**: Nếu hồ sơ hợp lệ, Cơ quan đăng ký kinh doanh sẽ cấp Giấy chứng nhận đăng ký doanh nghiệp. Nếu hồ sơ chưa hợp lệ, cơ quan này phải thông báo bằng văn bản nội dung cần sửa đổi, bổ sung.\n\n5. **Thông báo từ chối đăng ký (nếu có)**: Trong trường hợp từ chối đăng ký doanh nghiệp, Cơ quan đăng ký kinh doanh phải thông báo bằng văn bản cho người thành lập doanh nghiệp và nêu rõ lý do từ chối.\n\nTóm lại, thủ tục đăng ký thành lập doanh nghiệp bao gồm việc nộp hồ sơ, xem xét tính hợp lệ, cấp Giấy chứng nhận hoặc thông báo từ chối.",
+      "num_docs_retrieved": 4
+    },
+    {
+      "question_id": "Q06",
+      "category": "penal",
+      "question": "Tội trộm cắp tài sản có giá trị từ 50 triệu trở lên bị xử phạt thế nào?",
+      "terminal_node": "clarifier",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "clarifier"
+      ],
+      "e2e_latency_s": 4.1777,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.8692,
+        "retriever": 0.0416,
+        "checker": 1.6743,
+        "clarifier": 1.5864
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0235,
+        "qdrant_search": 0.018,
+        "filtering": 0.0001
+      },
+      "full_answer": "1. Bạn có biết rõ về loại tài sản bị trộm cắp là gì không?  \n2. Ai là người bị hại trong vụ trộm cắp này?  \n3. Bạn đang tìm hiểu về hình phạt cho người phạm tội hay quyền lợi của người bị hại?  ",
+      "num_docs_retrieved": 10
+    },
+    {
+      "question_id": "Q07",
+      "category": "civil",
+      "question": "Hợp đồng dân sự vô hiệu trong trường hợp nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 10.2527,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.8639,
+        "retriever": 0.0456,
+        "checker": 1.7845,
+        "answer": 7.5528
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0296,
+        "qdrant_search": 0.016,
+        "filtering": 0.0
+      },
+      "full_answer": "Hợp đồng dân sự vô hiệu trong các trường hợp sau:\n\n1. **Không tuân thủ quy định về hình thức**: Theo Điều 129 (Bộ luật Dân sự 2015), giao dịch dân sự vi phạm quy định điều kiện có hiệu lực về hình thức thì vô hiệu, trừ trường hợp các bên đã thực hiện ít nhất hai phần ba nghĩa vụ trong giao dịch.\n\n2. **Bị nhầm lẫn**: Theo Điều 126 (Bộ luật Dân sự 2015), nếu giao dịch dân sự được xác lập có sự nhầm lẫn làm cho một bên hoặc các bên không đạt được mục đích của việc xác lập giao dịch, bên bị nhầm lẫn có quyền yêu cầu Tòa án tuyên bố giao dịch vô hiệu.\n\n3. **Bị lừa dối, đe dọa, cưỡng ép**: Theo Điều 127 (Bộ luật Dân sự 2015), khi một bên tham gia giao dịch do bị lừa dối hoặc bị đe dọa, cưỡng ép thì có quyền yêu cầu Tòa án tuyên bố giao dịch đó là vô hiệu.\n\n4. **Người không nhận thức và làm chủ được hành vi của mình**: Theo Điều 132 (Bộ luật Dân sự 2015), giao dịch dân sự được xác lập bởi người không nhận thức và làm chủ được hành vi của mình cũng bị coi là vô hiệu.\n\n5. **Các trường hợp khác theo quy định**: Theo Điều 407 (Bộ luật Dân sự 2015), các quy định về giao dịch dân sự vô hiệu từ Điều 123 đến Điều 133 cũng được áp dụng đối với hợp đồng vô hiệu.",
+      "num_docs_retrieved": 5
+    },
+    {
+      "question_id": "Q08",
+      "category": "business",
+      "question": "Doanh nghiệp xã hội cần đáp ứng những tiêu chí gì?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 4.4585,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.7969,
+        "retriever": 0.0401,
+        "checker": 1.5358,
+        "answer": 2.0786
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0225,
+        "qdrant_search": 0.0176,
+        "filtering": 0.0
+      },
+      "full_answer": "Doanh nghiệp xã hội cần đáp ứng các tiêu chí sau đây:\n\n1. Là doanh nghiệp được đăng ký thành lập theo quy định của Luật này.\n2. Mục tiêu hoạt động nhằm giải quyết vấn đề xã hội, môi trường vì lợi ích cộng đồng.\n3. Sử dụng ít nhất 51% tổng lợi nhuận sau thuế hằng năm của doanh nghiệp để tái đầu tư nhằm thực hiện mục tiêu đã đăng ký.\n\nTheo Điều 10 (Luật Doanh nghiệp 2020).",
+      "num_docs_retrieved": 2
+    },
+    {
+      "question_id": "Q09",
+      "category": "marriage",
+      "question": "Quyền và nghĩa vụ của cha mẹ đối với con cái theo luật hôn nhân gia đình?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 7.8866,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.8099,
+        "retriever": 0.0411,
+        "checker": 2.1152,
+        "answer": 4.915
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0244,
+        "qdrant_search": 0.0167,
+        "filtering": 0.0
+      },
+      "full_answer": "Quyền và nghĩa vụ của cha mẹ đối với con cái theo Luật Hôn nhân và Gia đình 2014 được quy định như sau:\n\n1. **Quyền và nghĩa vụ chung của cha mẹ**:\n   - Theo Điều 68, quyền và nghĩa vụ của cha mẹ và con được tôn trọng và bảo vệ. Con sinh ra không phụ thuộc vào tình trạng hôn nhân của cha mẹ đều có quyền và nghĩa vụ như nhau đối với cha mẹ của mình.\n\n2. **Quyền yêu cầu và nghĩa vụ nuôi dưỡng**:\n   - Theo Điều 83, cha, mẹ trực tiếp nuôi con có quyền yêu cầu người không trực tiếp nuôi con thực hiện các nghĩa vụ theo quy định tại Điều 82 của Luật này và yêu cầu người không trực tiếp nuôi con cùng các thành viên gia đình tôn trọng quyền được nuôi con của mình.\n\n3. **Trách nhiệm chăm sóc và giáo dục**:\n   - Theo Điều 81, sau khi ly hôn, cha mẹ vẫn có quyền và nghĩa vụ trông nom, chăm sóc, nuôi dưỡng, giáo dục con chưa thành niên. Vợ, chồng có thể thỏa thuận về người trực tiếp nuôi con và nghĩa vụ, quyền của mỗi bên; nếu không thỏa thuận được, Tòa án sẽ quyết định dựa trên quyền lợi của con.\n\n4. **Cấm cản trở quyền thăm nom**:\n   - Theo Điều 83, cha, mẹ trực tiếp nuôi con cùng các thành viên gia đình không được cản trở người không trực tiếp nuôi con trong việc thăm nom, chăm sóc, nuôi dưỡng, giáo dục con.\n\nTóm lại, cha mẹ có quyền và nghĩa vụ bảo vệ, chăm sóc, nuôi dưỡng và giáo dục con cái, đồng thời phải tôn trọng quyền thăm nom của người không trực tiếp nuôi con.",
+      "num_docs_retrieved": 3
+    },
+    {
+      "question_id": "Q10",
+      "category": "procedure",
+      "question": "Quy trình giải quyết tranh chấp lao động cá nhân được thực hiện như thế nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 5.4365,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.0525,
+        "retriever": 0.037,
+        "checker": 0.0003,
+        "answer": 4.3413
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0207,
+        "qdrant_search": 0.0162,
+        "filtering": 0.0001
+      },
+      "full_answer": "Quy trình giải quyết tranh chấp lao động cá nhân được thực hiện theo các bước sau:\n\n1. **Hòa giải**: Tranh chấp lao động cá nhân phải được giải quyết thông qua thủ tục hòa giải của hòa giải viên lao động. Nếu hòa giải thành nhưng các bên không thực hiện hoặc thực hiện không đúng, hoặc hòa giải không thành, hoặc hết thời hạn hòa giải mà hòa giải viên lao động không tiến hành hòa giải, thì các bên có thể tiếp tục đến bước tiếp theo. (Theo Điều 32, Bộ luật Lao động 2019).\n\n2. **Thẩm quyền giải quyết**: Nếu hòa giải không thành, tranh chấp lao động cá nhân có thể được đưa ra giải quyết bởi các cơ quan, tổ chức có thẩm quyền như hòa giải viên lao động, Hội đồng trọng tài lao động hoặc Tòa án nhân dân. (Theo Điều 187, Bộ luật Lao động 2019).\n\n3. **Cấm hành động đơn phương**: Trong thời gian tranh chấp lao động đang được giải quyết, không bên nào được hành động đơn phương chống lại bên kia. (Theo Điều 186, Bộ luật Lao động 2019).\n\nQuy trình này đảm bảo rằng các bên liên quan có cơ hội giải quyết tranh chấp một cách hòa bình trước khi đưa ra các biện pháp pháp lý chính thức.",
+      "num_docs_retrieved": 4
+    }
+  ],
+  "statistics": {
+    "total_queries": 10,
+    "e2e_stats": {
+      "mean_s": 6.9149,
+      "median_s": 6.8371,
+      "min_s": 0.9779,
+      "max_s": 12.8059,
+      "stdev_s": 3.4048,
+      "p90_s": 12.8059,
+      "p95_s": 12.8059
+    },
+    "per_node_stats": {
+      "answer": {
+        "mean_s": 5.4699,
+        "median_s": 5.4352,
+        "min_s": 2.0786,
+        "max_s": 9.7773,
+        "stdev_s": 2.4808,
+        "count": 8
+      },
+      "checker": {
+        "mean_s": 1.3215,
+        "median_s": 1.605,
+        "min_s": 0.0002,
+        "max_s": 2.8216,
+        "stdev_s": 0.9871,
+        "count": 10
+      },
+      "clarifier": {
+        "mean_s": 1.5864,
+        "median_s": 1.5864,
+        "min_s": 1.5864,
+        "max_s": 1.5864,
+        "stdev_s": 0,
+        "count": 1
+      },
+      "contextualize": {
+        "mean_s": 0.0,
+        "median_s": 0.0,
+        "min_s": 0.0,
+        "max_s": 0.0,
+        "stdev_s": 0.0,
+        "count": 10
+      },
+      "fallback": {
+        "mean_s": 0.0003,
+        "median_s": 0.0003,
+        "min_s": 0.0003,
+        "max_s": 0.0003,
+        "stdev_s": 0,
+        "count": 1
+      },
+      "retriever": {
+        "mean_s": 0.0649,
+        "median_s": 0.0423,
+        "min_s": 0.037,
+        "max_s": 0.2609,
+        "stdev_s": 0.069,
+        "count": 10
+      },
+      "router": {
+        "mean_s": 0.9877,
+        "median_s": 0.8994,
+        "min_s": 0.7969,
+        "max_s": 1.5549,
+        "stdev_s": 0.2296,
+        "count": 10
+      }
+    },
+    "retriever_substep_stats": {
+      "embedding": {
+        "mean_s": 0.045,
+        "median_s": 0.0249,
+        "min_s": 0.0207,
+        "max_s": 0.223
+      },
+      "filtering": {
+        "mean_s": 0.0,
+        "median_s": 0.0,
+        "min_s": 0.0,
+        "max_s": 0.0001
+      },
+      "qdrant_search": {
+        "mean_s": 0.0199,
+        "median_s": 0.0174,
+        "min_s": 0.0153,
+        "max_s": 0.0379
+      }
+    },
+    "slowest_node": "answer",
+    "slowest_node_mean_s": 5.4699
+  }
+}
