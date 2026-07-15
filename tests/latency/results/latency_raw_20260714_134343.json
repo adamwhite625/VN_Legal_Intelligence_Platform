@@ -1,0 +1,376 @@
+{
+  "results": [
+    {
+      "question_id": "Q01",
+      "category": "penal",
+      "question": "Tội giết người bị xử phạt như thế nào theo Bộ luật Hình sự?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 9.0621,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 2.0965,
+        "retriever": 0.2703,
+        "checker": 2.0501,
+        "answer": 4.6375
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.216,
+        "qdrant_search": 0.0542,
+        "filtering": 0.0
+      },
+      "answer_preview": "Tội giết người bị xử phạt theo quy định của Bộ luật Hình sự như sau:\n\n1. **Tội giết người thông thường**: \n   - Theo Điề",
+      "num_docs_retrieved": 10
+    },
+    {
+      "question_id": "Q02",
+      "category": "civil",
+      "question": "Quyền thừa kế theo pháp luật được quy định ra sao?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 10.7813,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.0454,
+        "retriever": 0.0357,
+        "checker": 1.3728,
+        "answer": 8.3199
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0235,
+        "qdrant_search": 0.0121,
+        "filtering": 0.0
+      },
+      "answer_preview": "Quyền thừa kế theo pháp luật được quy định như sau:\n\n1. **Khái niệm**: Thừa kế theo pháp luật là thừa kế theo hàng thừa ",
+      "num_docs_retrieved": 5
+    },
+    {
+      "question_id": "Q03",
+      "category": "business",
+      "question": "Phạm vi điều chỉnh của Luật Doanh nghiệp 2020 là gì?",
+      "terminal_node": "fallback",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "fallback"
+      ],
+      "e2e_latency_s": 1.2266,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.1814,
+        "retriever": 0.0388,
+        "checker": 0.0002,
+        "fallback": 0.0001
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0226,
+        "qdrant_search": 0.0162,
+        "filtering": 0.0
+      },
+      "answer_preview": "Xin lỗi, hiện tại cơ sở dữ liệu của tôi chưa có văn bản pháp lý chính xác về vấn đề này. Để đảm bảo an toàn pháp lý, tôi",
+      "num_docs_retrieved": 0
+    },
+    {
+      "question_id": "Q04",
+      "category": "marriage",
+      "question": "Điều kiện kết hôn theo Luật Hôn nhân và Gia đình là gì?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 5.8983,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.9018,
+        "retriever": 0.0409,
+        "checker": 2.2614,
+        "answer": 2.6881
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0254,
+        "qdrant_search": 0.0155,
+        "filtering": 0.0
+      },
+      "answer_preview": "Theo Điều 3 của Luật Hôn nhân và Gia đình 2014, kết hôn là việc nam và nữ xác lập quan hệ vợ chồng với nhau theo quy địn",
+      "num_docs_retrieved": 4
+    },
+    {
+      "question_id": "Q05",
+      "category": "procedure",
+      "question": "Thủ tục đăng ký thành lập doanh nghiệp gồm những bước nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 6.1066,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.2135,
+        "retriever": 0.0323,
+        "checker": 0.0002,
+        "answer": 4.8541
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0214,
+        "qdrant_search": 0.0109,
+        "filtering": 0.0
+      },
+      "answer_preview": "Thủ tục đăng ký thành lập doanh nghiệp gồm các bước sau:\n\n1. **Chuẩn bị hồ sơ đăng ký doanh nghiệp**: Người thành lập do",
+      "num_docs_retrieved": 4
+    },
+    {
+      "question_id": "Q06",
+      "category": "penal",
+      "question": "Tội trộm cắp tài sản có giá trị từ 50 triệu trở lên bị xử phạt thế nào?",
+      "terminal_node": "clarifier",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "clarifier"
+      ],
+      "e2e_latency_s": 3.8585,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.968,
+        "retriever": 0.0368,
+        "checker": 1.3528,
+        "clarifier": 1.4952
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0233,
+        "qdrant_search": 0.0134,
+        "filtering": 0.0001
+      },
+      "answer_preview": "1. Bạn có biết rõ về loại tài sản bị trộm cắp là gì không?  \n2. Ai là người bị cáo buộc thực hiện hành vi trộm cắp này? ",
+      "num_docs_retrieved": 10
+    },
+    {
+      "question_id": "Q07",
+      "category": "civil",
+      "question": "Hợp đồng dân sự vô hiệu trong trường hợp nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 8.301,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.7626,
+        "retriever": 0.0295,
+        "checker": 1.8682,
+        "answer": 5.6344
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0188,
+        "qdrant_search": 0.0107,
+        "filtering": 0.0
+      },
+      "answer_preview": "Hợp đồng dân sự vô hiệu trong các trường hợp sau:\n\n1. **Không tuân thủ quy định về hình thức**: Theo Điều 129 (Bộ luật D",
+      "num_docs_retrieved": 5
+    },
+    {
+      "question_id": "Q08",
+      "category": "business",
+      "question": "Doanh nghiệp xã hội cần đáp ứng những tiêu chí gì?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 4.3809,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.9704,
+        "retriever": 0.0504,
+        "checker": 1.3035,
+        "answer": 2.0515
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0179,
+        "qdrant_search": 0.0324,
+        "filtering": 0.0
+      },
+      "answer_preview": "Doanh nghiệp xã hội cần đáp ứng các tiêu chí sau đây:\n\n1. Là doanh nghiệp được đăng ký thành lập theo quy định của Luật ",
+      "num_docs_retrieved": 2
+    },
+    {
+      "question_id": "Q09",
+      "category": "marriage",
+      "question": "Quyền và nghĩa vụ của cha mẹ đối với con cái theo luật hôn nhân gia đình?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 10.7115,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 1.1815,
+        "retriever": 0.0335,
+        "checker": 2.1596,
+        "answer": 7.3306
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0212,
+        "qdrant_search": 0.0122,
+        "filtering": 0.0001
+      },
+      "answer_preview": "Quyền và nghĩa vụ của cha mẹ đối với con cái theo Luật Hôn nhân và Gia đình 2014 được quy định như sau:\n\n1. **Quyền và n",
+      "num_docs_retrieved": 3
+    },
+    {
+      "question_id": "Q10",
+      "category": "procedure",
+      "question": "Quy trình giải quyết tranh chấp lao động cá nhân được thực hiện như thế nào?",
+      "terminal_node": "writer",
+      "node_trace": [
+        "contextualize",
+        "router",
+        "retriever",
+        "checker",
+        "writer"
+      ],
+      "e2e_latency_s": 4.6817,
+      "node_latencies_s": {
+        "contextualize": 0.0,
+        "router": 0.8126,
+        "retriever": 0.0407,
+        "checker": 0.0002,
+        "answer": 3.8218
+      },
+      "retriever_substeps_s": {
+        "embedding": 0.0248,
+        "qdrant_search": 0.0158,
+        "filtering": 0.0
+      },
+      "answer_preview": "Quy trình giải quyết tranh chấp lao động cá nhân được thực hiện theo các bước sau:\n\n1. **Hòa giải**: Tranh chấp lao động",
+      "num_docs_retrieved": 4
+    }
+  ],
+  "statistics": {
+    "total_queries": 10,
+    "e2e_stats": {
+      "mean_s": 6.5008,
+      "median_s": 6.0024,
+      "min_s": 1.2266,
+      "max_s": 10.7813,
+      "stdev_s": 3.1442,
+      "p90_s": 10.7813,
+      "p95_s": 10.7813
+    },
+    "per_node_stats": {
+      "answer": {
+        "mean_s": 4.9172,
+        "median_s": 4.7458,
+        "min_s": 2.0515,
+        "max_s": 8.3199,
+        "stdev_s": 2.1508,
+        "count": 8
+      },
+      "checker": {
+        "mean_s": 1.2369,
+        "median_s": 1.3628,
+        "min_s": 0.0002,
+        "max_s": 2.2614,
+        "stdev_s": 0.9181,
+        "count": 10
+      },
+      "clarifier": {
+        "mean_s": 1.4952,
+        "median_s": 1.4952,
+        "min_s": 1.4952,
+        "max_s": 1.4952,
+        "stdev_s": 0,
+        "count": 1
+      },
+      "contextualize": {
+        "mean_s": 0.0,
+        "median_s": 0.0,
+        "min_s": 0.0,
+        "max_s": 0.0,
+        "stdev_s": 0.0,
+        "count": 10
+      },
+      "fallback": {
+        "mean_s": 0.0001,
+        "median_s": 0.0001,
+        "min_s": 0.0001,
+        "max_s": 0.0001,
+        "stdev_s": 0,
+        "count": 1
+      },
+      "retriever": {
+        "mean_s": 0.0609,
+        "median_s": 0.0378,
+        "min_s": 0.0295,
+        "max_s": 0.2703,
+        "stdev_s": 0.0738,
+        "count": 10
+      },
+      "router": {
+        "mean_s": 1.1134,
+        "median_s": 1.0079,
+        "min_s": 0.7626,
+        "max_s": 2.0965,
+        "stdev_s": 0.3786,
+        "count": 10
+      }
+    },
+    "retriever_substep_stats": {
+      "embedding": {
+        "mean_s": 0.0415,
+        "median_s": 0.0229,
+        "min_s": 0.0179,
+        "max_s": 0.216
+      },
+      "filtering": {
+        "mean_s": 0.0,
+        "median_s": 0.0,
+        "min_s": 0.0,
+        "max_s": 0.0001
+      },
+      "qdrant_search": {
+        "mean_s": 0.0193,
+        "median_s": 0.0145,
+        "min_s": 0.0107,
+        "max_s": 0.0542
+      }
+    },
+    "slowest_node": "answer",
+    "slowest_node_mean_s": 4.9172
+  }
+}
