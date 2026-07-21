@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app import schemas, models
@@ -27,6 +28,26 @@ async def chat_with_lawyer(
         db=db,
         current_user=current_user,
         input_data=input_data,
+    )
+
+@router.post("/send-stream")
+@limiter.limit("5/minute")
+async def chat_with_lawyer_stream(
+    request: Request,
+    input_data: schemas.QueryInput,
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_user)
+):
+    """
+    Chat endpoint với context awareness dạng stream (Server-Sent Events)
+    """
+    return StreamingResponse(
+        ContextAwareChatService.process_context_chat_stream(
+            db=db,
+            current_user=current_user,
+            input_data=input_data,
+        ),
+        media_type="text/event-stream"
     )
 
 @router.get("/sessions", response_model=list[schemas.SessionResponse])

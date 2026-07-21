@@ -1,11 +1,10 @@
 import { create } from "zustand";
 import {
-  sendChatMessage,
+  streamChatMessage,
   startSession,
   getSessionHistory,
   getSessions,
   deleteSession,
-  type ChatResponse,
 } from "../api/consultantApi";
 
 interface Message {
@@ -131,25 +130,56 @@ export const useConsultantStore = create<ConsultantState>((set, get) => ({
         ? `${text}\n\nDựa trên văn bản sau:\n${context}`
         : text;
 
-      const data: ChatResponse = await sendChatMessage(
+      // Create a temporary message for the assistant
+      const tempMessageId = Date.now();
+      set((state) => ({
+        messages: [
+          ...state.messages,
+          {
+            id: tempMessageId,
+            sender: "assistant",
+            text: "",
+            sources: [],
+          },
+        ],
+      }));
+
+      const onChunk = (chunk: string) => {
+        set((state) => {
+          const newMessages = [...state.messages];
+          const assistantMessageIndex = newMessages.findIndex(
+            (m) => m.id === tempMessageId
+          );
+          if (assistantMessageIndex !== -1) {
+            newMessages[assistantMessageIndex].text += chunk;
+          }
+          return { messages: newMessages };
+        });
+      };
+
+      const result = await streamChatMessage(
         fullQuestion,
+        onChunk,
         state.contextType,
         sessionId,
         state.currentLawId || lawId || undefined,
       );
 
-      set((state) => ({
-        messages: [
-          ...state.messages,
-          {
-            id: data.message_id,
-            sender: "assistant",
-            text: data.answer,
-            sources: data.sources || [],
-          },
-        ],
-        currentSessionId: data.session_id,
-      }));
+      set((state) => {
+        const newMessages = [...state.messages];
+        const assistantMessageIndex = newMessages.findIndex(
+          (m) => m.id === tempMessageId
+        );
+        if (assistantMessageIndex !== -1) {
+          // Finalize message with actual DB ID and sources
+          newMessages[assistantMessageIndex].id = result.messageId;
+          newMessages[assistantMessageIndex].sources = result.sources || [];
+        }
+        return {
+          messages: newMessages,
+          currentSessionId: result.sessionId,
+        };
+      });
     } catch (error) {
       console.error("Chat error:", error);
       set((state) => ({

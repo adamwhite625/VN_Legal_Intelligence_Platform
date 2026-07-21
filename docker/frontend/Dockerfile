@@ -1,24 +1,23 @@
-# --- Stage 1: Build Stage ---
+# --- Stage 1: Build React app ---
 FROM node:20-alpine AS build
 
-# Thiết lập thư mục làm việc
 WORKDIR /app
 
-# Copy package.json và cài đặt dependencies
+# Install dependencies first for better layer caching
 COPY frontend/package*.json ./
 RUN npm install
 
-# Copy mã nguồn frontend và build
+# Copy source and build production bundle
 COPY frontend/ .
 RUN npm run build
 
-# --- Stage 2: Production Stage ---
+# --- Stage 2: Serve with Nginx ---
 FROM nginx:stable-alpine
 
-# Copy file build từ Stage 1 sang thư mục mặc định của Nginx
+# Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy cấu hình Nginx tùy chỉnh (Lắng nghe cổng 8080 cho Cloud Run)
+# Configure Nginx to listen on port 8080 and support SPA routing
 RUN echo 'server { \
     listen 8080; \
     location / { \
@@ -28,8 +27,6 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
-# Expose port 8080
 EXPOSE 8080
 
-# Chạy Nginx
 CMD ["nginx", "-g", "daemon off;"]

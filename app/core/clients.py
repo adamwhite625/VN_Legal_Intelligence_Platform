@@ -13,7 +13,7 @@ import time
 
 from qdrant_client import QdrantClient
 from qdrant_client.http.exceptions import UnexpectedResponse, ResponseHandlingException
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_openai import ChatOpenAI
 
 from app.core.config import settings
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 _qdrant_client: Optional[QdrantClient] = None
-_embeddings: Optional[HuggingFaceEmbeddings] = None
+_embeddings: Optional[FastEmbedEmbeddings] = None
 _llm: Optional[ChatOpenAI] = None
 
 
@@ -95,7 +95,7 @@ def init_clients() -> None:
     # ---------------------------
 
     if _embeddings is None:
-        _embeddings = HuggingFaceEmbeddings(
+        _embeddings = FastEmbedEmbeddings(
             model_name=settings.EMBEDDING_MODEL
         )
 
@@ -108,6 +108,7 @@ def init_clients() -> None:
             model=settings.OPENAI_MODEL,
             api_key=settings.OPENAI_API_KEY,
             temperature=settings.OPENAI_TEMPERATURE,
+            streaming=True,
         )
         logger.info("✓ LLM initialized successfully")
 
@@ -130,7 +131,7 @@ def get_qdrant_client() -> QdrantClient:
     return _qdrant_client
 
 
-def get_embeddings() -> HuggingFaceEmbeddings:
+def get_embeddings() -> FastEmbedEmbeddings:
     if _embeddings is None:
         raise RuntimeError("Embeddings not initialized.")
     return _embeddings

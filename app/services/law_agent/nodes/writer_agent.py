@@ -6,7 +6,7 @@ from app.services.law_agent.state import LawAgentState
 from app.services.formatters import format_sources_from_docs
 
 
-def answer_node(state: LawAgentState) -> LawAgentState:
+async def answer_node(state: LawAgentState) -> LawAgentState:
     """
     Generate final legal answer from retrieved documents or law context.
     """
@@ -82,11 +82,12 @@ CÂU TRẢ LỜI:
     chain = prompt | llm | StrOutputParser()
 
     try:
-        answer = chain.invoke(
+        answer = await chain.ainvoke(
             {
                 "context": context_text,
                 "query": state.standalone_query or state.query,
-            }
+            },
+            config={"tags": ["writer_node_llm"]}
         )
 
         state.generation = answer.strip()

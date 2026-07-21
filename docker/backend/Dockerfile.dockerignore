@@ -1,0 +1,17 @@
+frontend/
+mysql_data/
+qdrant_data/
+.git/
+.github/
+.env
+docs/
+images/
+tests/
+docker/
+__pycache__/
+*.pyc
+*.log
+*.md
+Jenkinsfile
+RUN_EVALUATION.py
+docker-compose.yml
