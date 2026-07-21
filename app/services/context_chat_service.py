@@ -240,6 +240,188 @@ class ContextAwareChatService:
         )
 
     @staticmethod
+    async def process_context_chat_stream(
+        db: Session,
+        current_user: models.User,
+        input_data: schemas.QueryInput,
+    ):
+        """
+        Xử lý chat với ngữ cảnh và stream kết quả về client bằng Server-Sent Events (SSE).
+        """
+        if not input_data.query or not input_data.query.strip():
+            yield f"data: {json.dumps({'type': 'error', 'message': 'Empty query.'})}\n\n"
+            return
+
+        # -------------------------
+        # 1. Load or create session
+        # -------------------------
+        session = None
+        context_text = ""
+
+        if input_data.session_id:
+            session = db.query(models.ChatSession).filter(
+                models.ChatSession.id == input_data.session_id,
+                models.ChatSession.user_id == current_user.id
+            ).first()
+
+        if not session:
+            session = models.ChatSession(
+                user_id=current_user.id,
+                session_type=input_data.context_type,
+                law_id=input_data.law_id if input_data.context_type == "law-detail" else None,
+                title=None
+            )
+            db.add(session)
+            db.flush()
+
+        # -------------------------
+        # 2. Build chat context
+        # -------------------------
+        chat_history_text = ContextAwareChatService._build_chat_history(
+            db, session.id
+        )
+
+        context_text = ""
+        if input_data.context_type == "law-detail" and input_data.law_id:
+            context_text = ContextAwareChatService._get_law_context(
+                db, current_user.id, input_data.law_id
+            )
+
+        # -------------------------
+        # 4. Build prompt
+        # -------------------------
+        prompt = ContextAwareChatService._build_prompt_with_context(
+            query=input_data.query,
+            chat_history=chat_history_text,
+            law_context=context_text,
+            context_type=input_data.context_type,
+        )
+
+        # -------------------------
+        # 5. Check Redis cache
+        # -------------------------
+        cache_key = ContextAwareChatService._generate_cache_key(
+            query=input_data.query,
+            context_type=input_data.context_type,
+            law_id=input_data.law_id
+        )
+        
+        cached_response = cache_get(cache_key)
+        final_answer = ""
+        formatted_sources = []
+        
+        # Send initialization event
+        yield f"data: {json.dumps({'type': 'init', 'session_id': session.id})}\n\n"
+        
+        if cached_response:
+            print(f"[HIT] Chat stream cache HIT for query: {input_data.query[:50]}...")
+            if isinstance(cached_response, str):
+                cached_data = json.loads(cached_response)
+            else:
+                cached_data = cached_response
+            final_answer = cached_data.get("answer", "")
+            formatted_sources = cached_data.get("sources", [])
+            
+            # Yield the full cached answer as a single chunk
+            yield f"data: {json.dumps({'type': 'chunk', 'content': final_answer})}\n\n"
+        else:
+            print(f"[MISS] Chat stream cache MISS for query: {input_data.query[:50]}..., calling AI stream...")
+            try:
+                inputs = {
+                    "query": prompt,
+                    "chat_history": chat_history_text,
+                }
+
+                # astream_events to catch token streams
+                async for event in agent_app.astream_events(inputs, version="v2"):
+                    # We only stream tokens from the writer_node_llm tag (as requested)
+                    if event["event"] == "on_chat_model_stream":
+                        if "writer_node_llm" in event.get("tags", []):
+                            chunk_text = event["data"]["chunk"].content
+                            if chunk_text:
+                                final_answer += chunk_text
+                                yield f"data: {json.dumps({'type': 'chunk', 'content': chunk_text})}\n\n"
+                                
+                    # Capture the final state to get sources and handle fallback/clarifier output
+                    if event["event"] == "on_chain_end" and event["name"] == "LangGraph":
+                        final_state = event["data"]["output"]
+                        
+                        # If final_answer is empty, it means we hit a node that didn't stream (like clarifier or fallback)
+                        if not final_answer and final_state.get("generation"):
+                            final_answer = final_state.get("generation", "")
+                            yield f"data: {json.dumps({'type': 'chunk', 'content': final_answer})}\n\n"
+                        
+                        raw_sources = final_state.get("sources", [])
+                        formatted_sources = raw_sources if raw_sources else []
+                
+                # Store response in cache (24 hours TTL)
+                if final_answer:
+                    cache_data = {
+                        "answer": final_answer,
+                        "sources": formatted_sources
+                    }
+                    cache_set(cache_key, json.dumps(cache_data), ttl=86400)
+
+            except Exception as e:
+                logger.error(f"Agent stream error: {str(e)}", exc_info=True)
+                yield f"data: {json.dumps({'type': 'error', 'message': f'AI service error: {str(e)}'})}\n\n"
+                return
+
+        # -------------------------
+        # 6. Persist messages
+        # -------------------------
+        try:
+            user_msg = models.Message(
+                session_id=session.id,
+                sender="user",
+                message=input_data.query,
+                sources=json.dumps([]),
+            )
+
+            bot_msg = models.Message(
+                session_id=session.id,
+                sender="assistant",
+                message=final_answer,
+                sources=json.dumps(formatted_sources),
+            )
+
+            db.add_all([user_msg, bot_msg])
+            db.flush()
+
+            # -------------------------
+            # 7. Check if need to summarize
+            # -------------------------
+            messages = db.query(models.Message).filter(
+                models.Message.session_id == session.id
+            ).all()
+
+            if len(messages) % (ContextAwareChatService.SUMMARY_THRESHOLD * 2) == 0:
+                ContextAwareChatService._create_message_summary(
+                    db, session.id, messages
+                )
+
+            # -------------------------
+            # 8. Set title if first message
+            # -------------------------
+            if not session.title:
+                try:
+                    session.title = await generate_chat_title(input_data.query)
+                except Exception as e:
+                    logger.warning(f"Failed to generate title: {e}")
+                    session.title = input_data.query[:50]
+
+            db.commit()
+            db.refresh(bot_msg)
+
+            # Send done event with sources
+            yield f"data: {json.dumps({'type': 'done', 'sources': formatted_sources, 'message_id': bot_msg.id})}\n\n"
+
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Database error in stream: {str(e)}", exc_info=True)
+            yield f"data: {json.dumps({'type': 'error', 'message': 'Database error'})}\n\n"
+
+    @staticmethod
     def _build_chat_history(db: Session, session_id: int) -> str:
         """Build chat history from last messages"""
         messages = db.query(models.Message).filter(

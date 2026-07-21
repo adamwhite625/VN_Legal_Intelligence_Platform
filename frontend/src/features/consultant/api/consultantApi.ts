@@ -50,6 +50,87 @@ export async function sendChatMessage(
   return response.data;
 }
 
+export async function streamChatMessage(
+  message: string,
+  onChunk: (chunk: string) => void,
+  contextType: "general" | "law-detail" = "general",
+  sessionId?: number,
+  lawId?: string,
+): Promise<{ sessionId: number; messageId: number; sources: string[] }> {
+  // Use native fetch to handle the stream
+  const token = localStorage.getItem("access_token"); // Adjust if your auth token is stored differently
+  
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/chat/send-stream`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({
+      query: message,
+      session_id: sessionId || null,
+      context_type: contextType,
+      law_id: lawId || null,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  if (!response.body) {
+    throw new Error("Response body is null");
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  let done = false;
+  
+  let finalSessionId = sessionId || 0;
+  let finalMessageId = 0;
+  let finalSources: string[] = [];
+
+  while (!done) {
+    const { value, done: readerDone } = await reader.read();
+    done = readerDone;
+    
+    if (value) {
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split("\n");
+      
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const dataStr = line.slice("data: ".length).trim();
+          if (!dataStr) continue;
+          
+          try {
+            const data = JSON.parse(dataStr);
+            
+            if (data.type === "init") {
+              finalSessionId = data.session_id;
+            } else if (data.type === "chunk") {
+              onChunk(data.content);
+            } else if (data.type === "done") {
+              finalSources = data.sources;
+              finalMessageId = data.message_id;
+            } else if (data.type === "error") {
+              throw new Error(data.message);
+            }
+          } catch (e) {
+            console.error("Error parsing stream JSON:", e);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    sessionId: finalSessionId,
+    messageId: finalMessageId,
+    sources: finalSources,
+  };
+}
+
 // ============= SESSION API =============
 
 export async function startSession(

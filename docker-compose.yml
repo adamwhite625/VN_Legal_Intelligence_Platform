@@ -48,6 +48,41 @@ services:
       timeout: 3s
       retries: 5
 
+  # 4. Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: law_backend_container
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      db_mysql:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - law_network
+
+  # 5. Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: law_frontend_container
+    restart: always
+    ports:
+      - "3000:8080"
+    depends_on:
+      - backend
+    networks:
+      - law_network
+
 networks:
   law_network:
     driver: bridge
