@@ -49,8 +49,6 @@ def init_redis() -> Optional[Redis]:
 
 def get_redis() -> Optional[Redis]:
     """Get Redis client instance."""
-    global _redis_client
-    
     if _redis_client is None:
         return init_redis()
     
