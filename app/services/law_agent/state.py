@@ -51,9 +51,11 @@ class LawAgentState(BaseModel):
     search_limit: Optional[int] = None
 
     # ----------------------
-    # Retrieval
+    # Retrieval & Web Search
     # ----------------------
     retrieved_docs: List[RetrievedDocument] = Field(default_factory=list)
+    web_search_results: List[str] = Field(default_factory=list)
+    search_source: Optional[Literal["qdrant", "web", "both"]] = None
 
     # ----------------------
     # Sufficiency Check

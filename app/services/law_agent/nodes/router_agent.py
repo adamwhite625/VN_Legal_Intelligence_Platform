@@ -28,14 +28,17 @@ def router_node(state: LawAgentState) -> LawAgentState:
         4. "SEARCH_MARRIAGE": Hôn nhân gia đình.
            - Yêu cầu: Set limit = 4
            
-        5. "NO_SEARCH": Xã giao (Chào bạn), câu hỏi vô nghĩa hoặc không liên quan luật.
+        5. "SEARCH_WEB": Luật quốc tế, tin tức pháp lý mới, hoặc câu hỏi ngoài cơ sở dữ liệu luật Việt Nam.
+           - Yêu cầu: Set limit = 0
+
+        6. "NO_SEARCH": Xã giao (Chào bạn), câu hỏi vô nghĩa hoặc không liên quan luật.
            - Yêu cầu: Set limit = 0
 
         Câu hỏi: {query}
         
         Trả về JSON duy nhất (Không giải thích):
         {{
-            "intent": "SEARCH_PENAL" | "SEARCH_CIVIL" | "SEARCH_PROCEDURE" | "SEARCH_MARRIAGE" | "NO_SEARCH",
+            "intent": "SEARCH_PENAL" | "SEARCH_CIVIL" | "SEARCH_PROCEDURE" | "SEARCH_MARRIAGE" | "SEARCH_WEB" | "NO_SEARCH",
             "limit": <số nguyên>
         }}
         """,

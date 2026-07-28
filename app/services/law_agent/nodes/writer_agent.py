@@ -45,6 +45,11 @@ async def answer_node(state: LawAgentState) -> LawAgentState:
                 f"Nội dung:\n{doc.content}"
             )
 
+    if state.web_search_results:
+        web_text = "\n".join(state.web_search_results)
+        context_blocks.append(f"KẾT QUẢ TÌM KIẾM WEB:\n{web_text}")
+        state.search_source = "both" if (state.retrieved_docs or law_context) else "web"
+
     context_text = "\n\n---\n\n".join(context_blocks)
 
     # ---------------------------

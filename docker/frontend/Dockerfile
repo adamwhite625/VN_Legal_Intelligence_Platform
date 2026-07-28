@@ -17,16 +17,21 @@ FROM nginx:stable-alpine
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Configure Nginx to listen on port 8080 and support SPA routing
+# Configure Nginx to listen on port 80, support SPA routing, and health checks
 RUN echo 'server { \
-    listen 8080; \
+    listen 80; \
     location / { \
         root /usr/share/nginx/html; \
         index index.html index.htm; \
         try_files $uri $uri/ /index.html; \
     } \
+    location /health { \
+        return 200 "ok"; \
+        add_header Content-Type text/plain; \
+    } \
 }' > /etc/nginx/conf.d/default.conf
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
