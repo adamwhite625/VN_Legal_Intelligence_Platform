@@ -90,8 +90,8 @@ jobs:
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         run: |
-          docker build -t "$REGISTRY/legal-backend:${{ github.sha }}" -f docker/backend/Dockerfile .
-          docker push "$REGISTRY/legal-backend:${{ github.sha }}"
+          docker build -t "$REGISTRY/legal-chatbot-backend:${{ github.sha }}" -f docker/backend/Dockerfile .
+          docker push "$REGISTRY/legal-chatbot-backend:${{ github.sha }}"
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.8"
@@ -128,8 +128,8 @@ jobs:
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         run: |
-          docker build -t "$REGISTRY/legal-frontend:${{ github.sha }}" -f docker/frontend/Dockerfile .
-          docker push "$REGISTRY/legal-frontend:${{ github.sha }}"
+          docker build -t "$REGISTRY/legal-chatbot-frontend:${{ github.sha }}" -f docker/frontend/Dockerfile .
+          docker push "$REGISTRY/legal-chatbot-frontend:${{ github.sha }}"
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.8"
