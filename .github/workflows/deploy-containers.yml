@@ -76,6 +76,9 @@ jobs:
       && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
       && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: http://legal-chatbot-alb-1754962006.ap-southeast-1.elb.amazonaws.com
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
@@ -107,6 +110,9 @@ jobs:
       && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
       && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: http://legal-chatbot-alb-1754962006.ap-southeast-1.elb.amazonaws.com
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
