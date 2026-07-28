@@ -23,8 +23,23 @@ def fallback_node(state: LawAgentState) -> LawAgentState:
         from app.services.law_agent.nodes.writer_agent import answer_node
         return answer_node(state)
     
-    # TRƯỜNG HỢP 1: KHÔNG TÌM THẤY LUẬT
+    # CASE 1: NO_LAW status or empty documents
     if status == "NO_LAW" or not docs:
+        if not state.web_search_results:
+            from app.services.law_agent.nodes.web_search_agent import web_search_node
+            state = web_search_node(state)
+
+        if state.web_search_results:
+            web_context = "\n".join(state.web_search_results)
+            state.generation = (
+                f"Trong cơ sở dữ liệu pháp luật Việt Nam chưa có văn bản phù hợp. "
+                f"Tuy nhiên, kết quả tìm kiếm web cho thấy:\n\n{web_context}"
+            )
+            state.search_source = "web"
+            state.sources = ["Web Search"]
+            state.node_trace.append("fallback")
+            return state
+
         state.generation = (
             "Xin lỗi, hiện tại cơ sở dữ liệu của tôi chưa có văn bản pháp lý chính xác về vấn đề này. "
             "Để đảm bảo an toàn pháp lý, tôi xin phép không tự suy đoán. Bạn vui lòng tham vấn luật sư trực tiếp."

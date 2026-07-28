@@ -20,6 +20,7 @@ from .nodes.checker_agent import sufficiency_checker_node
 from .nodes.writer_agent import answer_node
 from .nodes.fallback_agent import fallback_node
 from .nodes.clarifier_agent import clarifier_node
+from .nodes.web_search_agent import web_search_node
 
 # ==========================================================
 # Graph Definition
@@ -35,6 +36,7 @@ workflow = StateGraph(LawAgentState)
 workflow.add_node("contextualize", contextualize_node)
 workflow.add_node("router", router_node)
 workflow.add_node("retriever", retriever_node)
+workflow.add_node("web_search", web_search_node)
 workflow.add_node("checker", sufficiency_checker_node)
 workflow.add_node("answer", answer_node)
 workflow.add_node("fallback", fallback_node)
@@ -50,12 +52,35 @@ workflow.set_entry_point("contextualize")
 
 
 # ----------------------
-# Linear Flow
+# Router & Retrieval Routing
 # ----------------------
 
 workflow.add_edge("contextualize", "router")
-workflow.add_edge("router", "retriever")
+
+
+def route_after_router(state: LawAgentState) -> Literal["retriever", "web_search", "fallback"]:
+    """
+    Route to local vector search, live web search, or fallback.
+    """
+    if state.intent == "SEARCH_WEB":
+        return "web_search"
+    if state.intent == "NO_SEARCH":
+        return "fallback"
+    return "retriever"
+
+
+workflow.add_conditional_edges(
+    "router",
+    route_after_router,
+    {
+        "retriever": "retriever",
+        "web_search": "web_search",
+        "fallback": "fallback",
+    },
+)
+
 workflow.add_edge("retriever", "checker")
+workflow.add_edge("web_search", "checker")
 
 
 # ----------------------

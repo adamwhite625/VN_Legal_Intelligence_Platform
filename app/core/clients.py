@@ -104,13 +104,28 @@ def init_clients() -> None:
     # ---------------------------
 
     if _llm is None:
-        _llm = ChatOpenAI(
-            model=settings.OPENAI_MODEL,
-            api_key=settings.OPENAI_API_KEY,
-            temperature=settings.OPENAI_TEMPERATURE,
-            streaming=True,
-        )
-        logger.info("✓ LLM initialized successfully")
+        provider = getattr(settings, "LLM_PROVIDER", "openai").lower()
+        if provider == "bedrock":
+            import os
+            token = getattr(settings, "AWS_BEARER_TOKEN_BEDROCK", None)
+            if token:
+                os.environ["AWS_BEARER_TOKEN_BEDROCK"] = token
+
+            from langchain_aws import ChatBedrockConverse
+            _llm = ChatBedrockConverse(
+                model=settings.BEDROCK_MODEL_ID,
+                region_name=settings.BEDROCK_REGION,
+                temperature=settings.OPENAI_TEMPERATURE,
+            )
+            logger.info(f"LLM initialized: Bedrock ({settings.BEDROCK_MODEL_ID}) in {settings.BEDROCK_REGION}")
+        else:
+            _llm = ChatOpenAI(
+                model=settings.OPENAI_MODEL,
+                api_key=settings.OPENAI_API_KEY,
+                temperature=settings.OPENAI_TEMPERATURE,
+                streaming=True,
+            )
+            logger.info("LLM initialized: OpenAI")
 
     # ---------------------------
     # Initialize Redis

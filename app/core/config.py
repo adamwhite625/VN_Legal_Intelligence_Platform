@@ -38,17 +38,26 @@ class Settings(BaseSettings):
     # -------------------------
     SECRET_KEY: str = Field(..., min_length=32)
 
-    # -------------------------
-    # OpenAI / LLM
-    # -------------------------
-    OPENAI_API_KEY: str
+    LLM_PROVIDER: str = "openai"
+    OPENAI_API_KEY: str | None = None
     OPENAI_MODEL: str = "gpt-4o-mini"
     OPENAI_TEMPERATURE: float = 0.2
+
+    BEDROCK_MODEL_ID: str = "openai.gpt-oss-120b-1:0"
+    BEDROCK_REGION: str = "ap-northeast-1"
+    AWS_BEARER_TOKEN_BEDROCK: str | None = None
+
+    TINYFISH_API_KEY: str | None = None
 
     # -------------------------
     # Embeddings
     # -------------------------
     EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    EMBEDDING_PROVIDER: str = "ollama"
+    OLLAMA_EMBEDDING_MODEL: str = "qwen3-embedding:0.6b"
+    OLLAMA_BASE_URL: str = "http://localhost:11434/v1"
+    OLLAMA_API_KEY: str = "ollama"
+    OLLAMA_EMBEDDING_DIMENSIONS: int = 1024
 
     # -------------------------
     # Vector Database (Qdrant)
@@ -86,21 +95,11 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
     @property
     def SQLALCHEMY_DATABASE_URL(self) -> str:
-        """
-        Build database connection URL for SQLAlchemy.
-        Supports both TCP (local) and Unix Socket (Cloud Run).
-        """
-        # Nếu DB_HOST bắt đầu bằng '/', giả định đây là đường dẫn Unix Socket (Cloud SQL)
-        if self.DB_HOST.startswith("/"):
-            return (
-                f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@/"
-                f"{self.DB_NAME}?unix_socket={self.DB_HOST}"
-            )
-        
-        # Ngược lại dùng kết nối TCP truyền thống
+        """Build database connection URL for SQLAlchemy (TCP connection for local and RDS)."""
         return (
             f"mysql+pymysql://{self.DB_USER}:"
             f"{self.DB_PASSWORD}@"
@@ -108,5 +107,6 @@ class Settings(BaseSettings):
             f"{self.DB_PORT}/"
             f"{self.DB_NAME}"
         )
+
 
 settings = Settings()

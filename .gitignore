@@ -3,7 +3,23 @@ __pycache__/
 .env
 .vscode/
 venv/
+.venv/
 mysql_data/
 qdrant_data/
 *.log
-docs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+model_cache/
+*.egg-info/
+dist/
+build/
+frontend/node_modules/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
