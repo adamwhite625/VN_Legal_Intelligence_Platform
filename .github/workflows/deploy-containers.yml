@@ -142,3 +142,5 @@ jobs:
           terraform apply -auto-approve \
             -target='module.ecs["frontend"]' \
             -var="image_tag_frontend=${{ github.sha }}"
+
+
