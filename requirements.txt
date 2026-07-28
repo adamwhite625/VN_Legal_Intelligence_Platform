@@ -11,20 +11,19 @@ alembic==1.12.1
 # Cache & Session Management
 redis==5.0.1
 
-# Vector DB
-qdrant-client==1.7.0
-
 # LLM & AI
-langchain==0.2.17
-langchain-community==0.2.19
-langchain-openai==0.1.25
-langchain-aws==0.1.17
-boto3>=1.35.0
-langchain-text-splitters==0.2.4
-langgraph==0.4.0
+langchain>=1.0.0
+langchain-community>=0.3.0
+langchain-openai>=1.0.0
+langchain-aws>=1.6.2
+langchain-text-splitters>=1.0.0
+langgraph>=1.0.0
 
-fastembed==0.4.1
-openai==1.45.0
+boto3>=1.35.0
+openai>=1.100.0
+
+fastembed>=0.7.0
+qdrant-client>=1.14.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
