@@ -90,22 +90,15 @@ jobs:
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         run: |
-          docker build -t "$REGISTRY/legal-chatbot-backend:${{ github.sha }}" -f docker/backend/Dockerfile .
+          docker build -t "$REGISTRY/legal-chatbot-backend:${{ github.sha }}" -t "$REGISTRY/legal-chatbot-backend:latest" -f docker/backend/Dockerfile .
           docker push "$REGISTRY/legal-chatbot-backend:${{ github.sha }}"
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.9.8"
-      - name: Terraform init
-        working-directory: infra
-        run: terraform init
+          docker push "$REGISTRY/legal-chatbot-backend:latest"
       - name: Deploy backend service
-        working-directory: infra
-        env:
-          TF_VAR_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          terraform apply -auto-approve \
-            -target='module.ecs["backend"]' \
-            -var="image_tag_backend=${{ github.sha }}"
+          aws ecs update-service \
+            --cluster legal-chatbot-cluster \
+            --service legal-chatbot-backend \
+            --force-new-deployment
 
   deploy-frontend:
     needs: [changes]
@@ -128,19 +121,14 @@ jobs:
         env:
           REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         run: |
-          docker build -t "$REGISTRY/legal-chatbot-frontend:${{ github.sha }}" -f docker/frontend/Dockerfile .
+          docker build -t "$REGISTRY/legal-chatbot-frontend:${{ github.sha }}" -t "$REGISTRY/legal-chatbot-frontend:latest" -f docker/frontend/Dockerfile .
           docker push "$REGISTRY/legal-chatbot-frontend:${{ github.sha }}"
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.9.8"
-      - name: Terraform init
-        working-directory: infra
-        run: terraform init
+          docker push "$REGISTRY/legal-chatbot-frontend:latest"
       - name: Deploy frontend service
-        working-directory: infra
         run: |
-          terraform apply -auto-approve \
-            -target='module.ecs["frontend"]' \
-            -var="image_tag_frontend=${{ github.sha }}"
+          aws ecs update-service \
+            --cluster legal-chatbot-cluster \
+            --service legal-chatbot-frontend \
+            --force-new-deployment
 
 
