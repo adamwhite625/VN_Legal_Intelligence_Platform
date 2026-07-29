@@ -18,6 +18,10 @@ _json_file_path = None
 
 def _get_json_file_path() -> Path:
     """Get the path to the raw law data JSON file."""
+    # Check root data/ directory first
+    data_path = Path(__file__).parent.parent.parent / "data" / "raw_law_data.json"
+    if data_path.exists():
+        return data_path
     return Path(__file__).parent.parent / "core" / "raw_law_data.json"
 
 
