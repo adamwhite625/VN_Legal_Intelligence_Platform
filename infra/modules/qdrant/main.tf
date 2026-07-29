@@ -10,13 +10,13 @@ resource "aws_efs_file_system" "qdrant" {
 
 resource "aws_efs_mount_target" "qdrant_a" {
   file_system_id  = aws_efs_file_system.qdrant.id
-  subnet_id       = var.private_subnet_ids[0]
+  subnet_id       = var.public_subnet_ids[0]
   security_groups = [var.qdrant_security_group_id]
 }
 
 resource "aws_efs_mount_target" "qdrant_b" {
   file_system_id  = aws_efs_file_system.qdrant.id
-  subnet_id       = var.private_subnet_ids[1]
+  subnet_id       = var.public_subnet_ids[1]
   security_groups = [var.qdrant_security_group_id]
 }
 
@@ -129,9 +129,9 @@ resource "aws_ecs_service" "qdrant" {
   platform_version = "1.4.0"
 
   network_configuration {
-    subnets          = var.private_subnet_ids
+    subnets          = var.public_subnet_ids
     security_groups  = [var.qdrant_security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {

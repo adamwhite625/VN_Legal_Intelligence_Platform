@@ -60,7 +60,7 @@ module "qdrant" {
   source                   = "./modules/qdrant"
   app_name                 = var.app_name
   vpc_id                   = module.network.vpc_id
-  private_subnet_ids       = module.network.private_subnet_ids
+  public_subnet_ids        = module.network.public_subnet_ids
   qdrant_security_group_id = module.network.qdrant_security_group_id
   cluster_id               = module.ecs.cluster_id
   execution_role_arn       = module.ecs.execution_role_arn
