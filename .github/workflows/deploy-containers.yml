@@ -137,4 +137,70 @@ jobs:
             --service legal-chatbot-frontend \
             --force-new-deployment
 
+  seed-data:
+    needs: [deploy-backend]
+    if: success()
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push seed image
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          docker build -t "$REGISTRY/legal-chatbot-backend:seed" -f docker/backend/Dockerfile .
+          docker push "$REGISTRY/legal-chatbot-backend:seed"
+      - name: Run seed task
+        run: |
+          # Get current backend task definition for environment variables
+          TASK_DEF=$(aws ecs describe-task-definition --task-definition legal-chatbot-backend --query 'taskDefinition' --output json)
+          EXECUTION_ROLE=$(echo $TASK_DEF | jq -r '.executionRoleArn')
+          SUBNETS=$(aws ecs describe-services --cluster legal-chatbot-cluster --services legal-chatbot-backend --query 'services[0].networkConfiguration.awsvpcConfiguration.subnets' --output json)
+          SECURITY_GROUPS=$(aws ecs describe-services --cluster legal-chatbot-cluster --services legal-chatbot-backend --query 'services[0].networkConfiguration.awsvpcConfiguration.securityGroups' --output json)
 
+          # Register a one-shot seed task definition
+          CONTAINER_DEFS=$(echo $TASK_DEF | jq '.containerDefinitions | .[0].command = ["python", "scripts/seed_production.py"] | .[0].name = "seed"')
+
+          aws ecs register-task-definition \
+            --family legal-chatbot-seed \
+            --network-mode awsvpc \
+            --requires-compatibilities FARGATE \
+            --cpu "512" \
+            --memory "1024" \
+            --execution-role-arn "$EXECUTION_ROLE" \
+            --task-role-arn "$EXECUTION_ROLE" \
+            --container-definitions "$CONTAINER_DEFS"
+
+          # Run the seed task
+          TASK_ARN=$(aws ecs run-task \
+            --cluster legal-chatbot-cluster \
+            --task-definition legal-chatbot-seed \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=$SUBNETS,securityGroups=$SECURITY_GROUPS,assignPublicIp=ENABLED}" \
+            --query 'tasks[0].taskArn' \
+            --output text)
+
+          echo "Seed task started: $TASK_ARN"
+
+          # Wait for task to complete (max 10 minutes)
+          echo "Waiting for seed task to complete..."
+          aws ecs wait tasks-stopped --cluster legal-chatbot-cluster --tasks "$TASK_ARN"
+
+          # Check exit code
+          EXIT_CODE=$(aws ecs describe-tasks --cluster legal-chatbot-cluster --tasks "$TASK_ARN" --query 'tasks[0].containers[0].exitCode' --output text)
+          if [ "$EXIT_CODE" != "0" ]; then
+            echo "Seed task failed with exit code: $EXIT_CODE"
+            aws ecs describe-tasks --cluster legal-chatbot-cluster --tasks "$TASK_ARN" --query 'tasks[0].stoppedReason' --output text
+            exit 1
+          fi
+
+          echo "Seed task completed successfully"

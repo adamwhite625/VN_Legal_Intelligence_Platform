@@ -28,12 +28,15 @@ def init_redis() -> Optional[Redis]:
         return _redis_client
     
     try:
+        # ElastiCache Serverless requires TLS
+        use_ssl = settings.ENVIRONMENT == "production" or "amazonaws.com" in settings.REDIS_HOST
         _redis_client = Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
             db=settings.REDIS_DB,
             decode_responses=True,
             socket_connect_timeout=5,
+            ssl=use_ssl,
         )
         
         # Test connection
