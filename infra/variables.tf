@@ -29,7 +29,7 @@ variable "image_tag_frontend" {
 }
 
 variable "openai_api_key" {
-  description = "OpenAI API Key stored in AWS Secrets Manager"
+  description = "OpenAI API Key"
   type        = string
   sensitive   = true
   default     = ""
@@ -40,4 +40,11 @@ variable "db_password" {
   type        = string
   sensitive   = true
   default     = "LegalBotPass2026!"
+}
+
+variable "aws_bearer_token_bedrock" {
+  description = "AWS Bearer Token for Bedrock access"
+  type        = string
+  sensitive   = true
+  default     = ""
 }

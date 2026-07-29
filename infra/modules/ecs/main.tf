@@ -28,6 +28,27 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Allow ECS tasks to mount EFS volumes (for Qdrant persistent storage)
+resource "aws_iam_role_policy" "ecs_efs_access" {
+  name = "${var.app_name}-ecs-efs-access"
+  role = aws_iam_role.ecs_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "elasticfilesystem:ClientMount",
+          "elasticfilesystem:ClientWrite",
+          "elasticfilesystem:ClientRootAccess"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_cloudwatch_log_group" "backend" {
   name              = "/ecs/${var.app_name}-backend"
   retention_in_days = 7
@@ -60,11 +81,23 @@ resource "aws_ecs_task_definition" "backend" {
       environment = [
         { name = "ENVIRONMENT", value = var.environment },
         { name = "OPENAI_API_KEY", value = var.openai_api_key },
-        { name = "SECRET_KEY", value = "secret_key_for_legal_chatbot_api_32_chars" },
-        { name = "DB_USER", value = "root" },
-        { name = "DB_PASSWORD", value = "legalbot_password" },
-        { name = "DB_NAME", value = "law_chatbot_db" },
-        { name = "DB_HOST", value = "localhost" }
+        { name = "SECRET_KEY", value = var.secret_key },
+        { name = "DB_USER", value = var.db_user },
+        { name = "DB_PASSWORD", value = var.db_password },
+        { name = "DB_NAME", value = var.db_name },
+        { name = "DB_HOST", value = var.db_host },
+        { name = "DB_PORT", value = tostring(var.db_port) },
+        { name = "QDRANT_HOST", value = var.qdrant_host },
+        { name = "QDRANT_PORT", value = "6333" },
+        { name = "COLLECTION_NAME", value = "law_data" },
+        { name = "REDIS_HOST", value = var.redis_host },
+        { name = "REDIS_PORT", value = tostring(var.redis_port) },
+        { name = "LLM_PROVIDER", value = "openai" },
+        { name = "BEDROCK_MODEL_ID", value = var.bedrock_model_id },
+        { name = "BEDROCK_REGION", value = var.bedrock_region },
+        { name = "AWS_BEARER_TOKEN_BEDROCK", value = var.aws_bearer_token_bedrock },
+        { name = "EMBEDDING_PROVIDER", value = "fastembed" },
+        { name = "EMBEDDING_MODEL", value = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2" },
       ]
       logConfiguration = {
         logDriver = "awslogs"

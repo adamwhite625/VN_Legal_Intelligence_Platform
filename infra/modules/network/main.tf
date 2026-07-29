@@ -127,3 +127,74 @@ resource "aws_security_group" "ecs_tasks" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+# Security group for RDS MySQL
+resource "aws_security_group" "database" {
+  name        = "${var.app_name}-db-sg"
+  description = "Allow MySQL access from ECS tasks"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_tasks.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Security group for ElastiCache Redis
+resource "aws_security_group" "redis" {
+  name        = "${var.app_name}-redis-sg"
+  description = "Allow Redis access from ECS tasks"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_tasks.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Security group for Qdrant vector database
+resource "aws_security_group" "qdrant" {
+  name        = "${var.app_name}-qdrant-sg"
+  description = "Allow Qdrant access from ECS tasks"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 6333
+    to_port         = 6334
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_tasks.id]
+  }
+
+  # NFS for EFS mount
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    self      = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

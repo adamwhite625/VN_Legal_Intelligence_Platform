@@ -15,3 +15,17 @@ output "alb_dns_name" {
   value       = module.alb.alb_dns_name
 }
 
+output "rds_endpoint" {
+  description = "RDS MySQL cluster endpoint"
+  value       = module.rds.cluster_endpoint
+}
+
+output "redis_endpoint" {
+  description = "ElastiCache Redis endpoint"
+  value       = module.elasticache.redis_endpoint
+}
+
+output "qdrant_dns" {
+  description = "Qdrant internal DNS name"
+  value       = module.qdrant.qdrant_dns_name
+}
