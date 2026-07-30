@@ -54,6 +54,46 @@ def create_tables():
     logger.info("All tables created successfully")
 
 
+def seed_default_users():
+    """Seed initial admin and user accounts if they do not exist."""
+    from app.db.session import SessionLocal
+    from app.models import User
+    from app.core.security import get_password_hash
+
+    db = SessionLocal()
+    try:
+        # 1. Admin account
+        admin = db.query(User).filter_by(email="admin@legalbot.vn").first()
+        if not admin:
+            admin = User(
+                email="admin@legalbot.vn",
+                hashed_password=get_password_hash("Admin@123456"),
+                full_name="Quản Trị Viên",
+                role="admin"
+            )
+            db.add(admin)
+            logger.info("✓ Created default admin account: admin@legalbot.vn / Admin@123456")
+
+        # 2. Test user account
+        user = db.query(User).filter_by(email="user@legalbot.vn").first()
+        if not user:
+            user = User(
+                email="user@legalbot.vn",
+                hashed_password=get_password_hash("User@123456"),
+                full_name="Người Dùng Mẫu",
+                role="user"
+            )
+            db.add(user)
+            logger.info("✓ Created default user account: user@legalbot.vn / User@123456")
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        logger.error("Error seeding default users: %s", str(e))
+    finally:
+        db.close()
+
+
 def wait_for_qdrant(max_retries=30, delay=5):
     """Wait until Qdrant is accepting connections."""
     from qdrant_client import QdrantClient
@@ -175,6 +215,7 @@ def main():
         sys.exit(1)
 
     create_tables()
+    seed_default_users()
 
     if not wait_for_qdrant():
         sys.exit(1)
