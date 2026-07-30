@@ -20,3 +20,4 @@ evaluation.log
 Jenkinsfile
 infra
 .terraform
+model_cache

@@ -1,0 +1,16 @@
+Test ID,Category,Difficulty,Status,MRR,nDCG,Coverage,Accuracy,Completeness,Relevance,Overall Score,Time (s)
+test_001,business_establishment,easy,PASS,0.667,0.752,100.0,5.00,5.00,5.00,5.00,4.87
+test_002,business_subjects,easy,FAIL,0.467,0.565,80.0,4.00,3.00,4.00,3.70,5.29
+test_003,business_rights,medium,FAIL,0.167,0.214,33.3,4.00,3.00,4.00,3.70,8.68
+test_004,business_obligations,medium,FAIL,0.339,0.479,83.3,5.00,4.00,5.00,4.70,5.42
+test_005,definitions,hard,FAIL,0.444,0.503,66.7,5.00,4.00,5.00,4.70,4.41
+test_006,business_types,medium,PASS,0.800,0.841,100.0,5.00,4.00,4.00,4.40,4.21
+test_007,legal_representative,hard,PASS,1.000,1.000,100.0,5.00,5.00,5.00,5.00,5.11
+test_008,capital_contribution,medium,FAIL,0.500,0.568,80.0,5.00,4.00,5.00,4.70,4.59
+test_009,social_enterprise,hard,PASS,1.000,0.900,100.0,5.00,5.00,5.00,5.00,3.20
+test_010,document_preservation,easy,PASS,1.000,0.971,100.0,5.00,5.00,5.00,5.00,5.32
+test_011,prohibited_acts,hard,FAIL,0.500,0.484,50.0,5.00,4.00,5.00,4.70,5.48
+test_012,state_protection,medium,PASS,1.000,0.965,100.0,5.00,4.00,5.00,4.70,5.44
+test_013,definitions,easy,FAIL,0.240,0.254,40.0,4.00,3.00,4.00,3.70,4.70
+test_014,business_types,medium,FAIL,0.467,0.632,100.0,5.00,5.00,5.00,5.00,2.62
+test_015,legal_representative,hard,FAIL,0.733,0.710,100.0,4.00,3.00,4.00,3.70,6.68

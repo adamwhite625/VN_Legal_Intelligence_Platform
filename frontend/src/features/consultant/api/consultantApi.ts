@@ -58,9 +58,10 @@ export async function streamChatMessage(
   lawId?: string,
 ): Promise<{ sessionId: number; messageId: number; sources: string[] }> {
   // Use native fetch to handle the stream
-  const token = localStorage.getItem("access_token"); // Adjust if your auth token is stored differently
+  const token = localStorage.getItem("token"); // Adjust if your auth token is stored differently
   
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/chat/send-stream`, {
+  const baseUrl = import.meta.env.VITE_API_URL || "";
+  const response = await fetch(`${baseUrl}/api/v1/chat/send-stream`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -6,20 +6,22 @@ VN Legal Intelligence Platform is a production-grade legal information system le
 
 ## Evaluation Summary
 
-The system is continuously validated using a specialized evaluation framework for RAG systems.
+The system is continuously validated using a specialized evaluation framework for RAG systems aligned with the **R2AI 2026 Benchmark** criteria.
 
 **Status: PASS (Production Ready)**
 
-| Metric                               | Score / Value |
-| ------------------------------------ | ------------- |
-| **Answer Accuracy**            | 4.67 / 5.0    |
-| **Answer Completeness**        | 4.20 / 5.0    |
-| **Answer Relevance**           | 4.73 / 5.0    |
-| **Mean Reciprocal Rank (MRR)** | 0.623         |
-| **nDCG**                       | 0.623         |
-| **Knowledge Coverage**         | 83.3%         |
+| Metric Category | Metric Name | Score / Value |
+| --- | --- | --- |
+| **Answer Generation Quality (Avg QA)** | **Chính xác nội dung (Accuracy)** | 4.73 / 5.0 |
+| | **Đầy đủ & toàn diện (Completeness)** | 4.07 / 5.0 |
+| | **Thực tiễn & áp dụng (Relevance)** | 4.67 / 5.0 |
+| | **Final Avg QA Score** | **4.51 / 5.0** |
+| **Retrieval Quality (Docs & Articles)** | **MRR (Ranking Precision)** | 0.622 |
+| | **nDCG (Ranking Quality)** | 0.656 |
+| | **Docs Recall (Keyword Coverage)** | 82.2% |
+| **Performance Metrics** | **Avg Latency** | 5.07s / query |
 
-**Note:** All quality gates have been passed (Thresholds: MRR \>= 0.62, nDCG \>= 0.62, Accuracy \>= 4.4). Detailed reports are generated in `tests/results/reports/`.
+**Note:** All quality gates have been passed (Thresholds: MRR ≥ 0.62, nDCG ≥ 0.62, Accuracy ≥ 4.4). Detailed reports are generated in `tests/results/reports/`.
 
 ---
 

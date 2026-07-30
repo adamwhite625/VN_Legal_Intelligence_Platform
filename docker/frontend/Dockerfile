@@ -17,9 +17,15 @@ FROM nginx:stable-alpine
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Configure Nginx to listen on port 80, support SPA routing, and health checks
+# Nginx config: serve SPA + proxy API to backend
 RUN echo 'server { \
     listen 80; \
+    location /api/ { \
+        proxy_pass http://backend:8000; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
+    } \
     location / { \
         root /usr/share/nginx/html; \
         index index.html index.htm; \

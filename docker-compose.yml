@@ -35,12 +35,7 @@ services:
       - law_qdrant_data:/qdrant/storage
     networks:
       - law_network
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:6333/healthz || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+
 
   # 3. Redis
   redis:
@@ -71,11 +66,16 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      - DB_HOST=db_mysql
+      - QDRANT_HOST=qdrant
+      - REDIS_HOST=redis
+      - COLLECTION_NAME=law_data
     depends_on:
       db_mysql:
         condition: service_healthy
       qdrant:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
     networks:
