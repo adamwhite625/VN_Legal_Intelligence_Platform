@@ -326,7 +326,8 @@ def run_evaluation(config_tier: str, sample_size: int = None, verbose: bool = Fa
         
     except Exception as e:
         logger.error(f"Error generating reports: {e}")
-        return False
+        # pass instead of return False to ensure summary is printed even if saving to disk fails
+        pass
     
     # 9. Print summary
     print_summary(batch_result, report)
@@ -336,27 +337,32 @@ def run_evaluation(config_tier: str, sample_size: int = None, verbose: bool = Fa
 
 
 def print_summary(batch_result, report):
-    """In bản tóm tắt kết quả - focus on quality metrics"""
+    """Print production evaluation summary aligned with R2AI 2026 benchmark criteria"""
     
     print(f"\n{'='*80}")
-    print("EVALUATION SUMMARY")
+    print("PRODUCTION EVALUATION SUMMARY (R2AI 2026 Benchmark)")
     print(f"{'='*80}\n")
     
     print(f"SYSTEM QUALITY: {report.overall_quality}")
-    print(f"  Status: {'✓ Ready' if report.ready_for_deployment else '⚠ Needs Review'}\n")
+    print(f"  Status: {'Ready for Production' if report.ready_for_deployment else 'Needs Review'}\n")
     
-    print(f"ANSWER GENERATION QUALITY (Primary)")
-    print(f"  Accuracy: {batch_result.avg_accuracy:.2f}/5 {'[EXCELLENT]' if batch_result.avg_accuracy >= 4.6 else '[GOOD]' if batch_result.avg_accuracy >= 4.3 else '[OK]'}")
-    print(f"  Completeness: {batch_result.avg_completeness:.2f}/5 {'[GOOD]' if batch_result.avg_completeness >= 4.0 else '[OK]'}")
-    print(f"  Relevance: {batch_result.avg_relevance:.2f}/5 {'[EXCELLENT]' if batch_result.avg_relevance >= 4.6 else '[GOOD]' if batch_result.avg_relevance >= 4.2 else '[OK]'}")
-    print(f"  Overall Score: {batch_result.avg_overall_score:.2f}/5\n")
+    print(f"ANSWER GENERATION QUALITY (Avg QA)")
+    print(f"  Chinh xac noi dung (Accuracy): {batch_result.avg_accuracy:.2f}/5 {'[EXCELLENT]' if batch_result.avg_accuracy >= 4.6 else '[GOOD]' if batch_result.avg_accuracy >= 4.3 else '[OK]'}")
+    print(f"  Day du & toan dien (Completeness): {batch_result.avg_completeness:.2f}/5 {'[GOOD]' if batch_result.avg_completeness >= 4.0 else '[OK]'}")
+    print(f"  Thuc tien & ap dung (Relevance): {batch_result.avg_relevance:.2f}/5 {'[EXCELLENT]' if batch_result.avg_relevance >= 4.6 else '[GOOD]' if batch_result.avg_relevance >= 4.2 else '[OK]'}")
+    print(f"  Final Avg QA Score: {batch_result.avg_overall_score:.2f}/5\n")
     
-    print(f"RETRIEVAL METRICS (Supporting)")
-    print(f"  MRR: {batch_result.avg_mrr:.3f} {'[GOOD]' if batch_result.avg_mrr >= 0.62 else '[OK]'}")
-    print(f"  nDCG: {batch_result.avg_ndcg:.3f} {'[GOOD]' if batch_result.avg_ndcg >= 0.62 else '[OK]'}")
-    print(f"  Coverage: {batch_result.avg_keyword_coverage:.1f}%\n")
+    print(f"RETRIEVAL METRICS (Docs & Articles)")
+    print(f"  MRR (Ranking Precision): {batch_result.avg_mrr:.3f} {'[GOOD]' if batch_result.avg_mrr >= 0.62 else '[OK]'}")
+    print(f"  nDCG (Ranking Quality): {batch_result.avg_ndcg:.3f} {'[GOOD]' if batch_result.avg_ndcg >= 0.62 else '[OK]'}")
+    print(f"  Docs Recall (Keyword Coverage): {batch_result.avg_keyword_coverage:.1f}%\n")
     
-    print(f"QUALITY GATES: {'✓ PASSED' if batch_result.quality_gates_passed else '✗ NOT PASSED'}\n")
+    print(f"PERFORMANCE METRICS")
+    avg_latency = batch_result.duration / batch_result.total_tests if batch_result.total_tests > 0 else 0
+    print(f"  Avg Latency: {avg_latency:.2f}s per query")
+    print(f"  Success Rate: {batch_result.success_rate:.1f}%\n")
+    
+    print(f"QUALITY GATES: {'PASSED' if batch_result.quality_gates_passed else 'NOT PASSED'}\n")
 
 
 # ============================================
