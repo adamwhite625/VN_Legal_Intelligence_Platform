@@ -17,7 +17,7 @@ FROM nginx:stable-alpine
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Nginx config: serve SPA + proxy API to backend
+# Nginx config: serve SPA + proxy API to backend with SSE streaming support
 RUN echo 'server { \
     listen 80; \
     location /api/ { \
@@ -25,6 +25,11 @@ RUN echo 'server { \
         proxy_set_header Host $host; \
         proxy_set_header X-Real-IP $remote_addr; \
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
+        proxy_set_header X-Forwarded-Proto $scheme; \
+        proxy_buffering off; \
+        proxy_cache off; \
+        proxy_read_timeout 300s; \
+        chunked_transfer_encoding on; \
     } \
     location / { \
         root /usr/share/nginx/html; \

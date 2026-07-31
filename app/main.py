@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from datetime import datetime, timezone
@@ -74,7 +75,13 @@ async def request_context(request, call_next):
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://legal-chatbot-alb-1754962006.ap-southeast-1.elb.amazonaws.com",
 ]
+
+# Allow additional origins from environment variable
+extra_origin = os.getenv("CORS_ORIGIN")
+if extra_origin:
+    origins.append(extra_origin)
 
 app.add_middleware(
     CORSMiddleware,
